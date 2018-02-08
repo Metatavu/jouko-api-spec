@@ -10,7 +10,7 @@ securityDefinitions:
   basicAuth:
     type: basic
 security:
-- basicAuth: []
+  - basicAuth: []
 consumes:
   - application/json;charset=utf-8
 produces:
@@ -19,18 +19,20 @@ paths:
   /interruptions:
     get:
       operationId: listInterruptions
-      summary: Lists interruptions
+      summary: List interruptions
       parameters:
         - name: from
           in: query
-          description: "List interruptions that start after this point of time, inclusive"
+          description: List interruptions that start after this point of time, inclusive
           required: true
-          type: date-time
+          type: string
+          format: date-time
         - name: to
           in: query
-          description: "List interruptions that end before this point of time, exclusive"
+          description: List interruptions that end before this point of time, exclusive
           required: true
-          type: date-time
+          type: string
+          format: date-time
       responses:
         200:
           description: Success
@@ -43,11 +45,16 @@ paths:
       operationId: setInterruptionCancelled
       summary: "Set interruption's cancellation status"
       parameters:
+        - name: id
+          in: path
+          description: The id of the interruption to set cancellation status of
+          required: true
+          type: integer
         - name: body
           in: body
-          description: "The cancellation status"
+          description: The cancellation status
           required: true
-          type:
+          schema:
             $ref: '#/definitions/InterruptionCancellation'
       responses:
         200:
@@ -57,7 +64,7 @@ paths:
   /devices:
     get:
       operationId: listDevices
-      summary: Lists devices
+      summary: List devices
       parameters:
         - name: firstResult
           in: query
@@ -77,3 +84,42 @@ paths:
             items:
               $ref: '#/definitions/Device'
 definitions:
+  Interruption:
+    type: object
+    properties:
+      id:
+        description: Interruption id
+        type: string
+        format: uuid
+      from:
+        description: Start time of the interruption, inclusive
+        type: string
+        format: date-time
+      to:
+        description: End time of the interruption, exclusive
+        type: string
+        format: date-time
+      deviceId:
+        description: The ID of the interrupted device
+        type: string
+        format: uuid
+      cancelled:
+        description: True if the interruption has been cancelled
+        type: boolean
+  InterruptionCancellation:
+    type: object
+    properties:
+      cancelled:
+        description: True if the interruption has been cancelled
+        type: boolean
+  Device:
+    type: object
+    properties:
+      id:
+        description: Interruption id
+        type: string
+        format: uuid
+      name:
+        description: The name of the device
+        type: string
+      

@@ -5,7 +5,6 @@ const fs = require('fs');
 module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt);
   
-  const JAVASCRIPT_VERSION = require('./javascript-generated/package.json').version;
   const SWAGGER_SRC = "https://oss.sonatype.org/content/repositories/snapshots/io/swagger/swagger-codegen-cli/3.0.0-SNAPSHOT/swagger-codegen-cli-3.0.0-20180112.231857-20.jar";
   
   grunt.registerMultiTask('javascript-package-update', 'Updates package.json -file', function () {
@@ -36,7 +35,7 @@ module.exports = function(grunt) {
           '--model-package fi.metatavu.jouko.server.rest.model ' +
           '--group-id fi.metatavu.jouko ' +
           '--artifact-id jouko-api-spec ' +
-          '--artifact-version 0.0.1' +
+          '--artifact-version 0.0.1 ' +
           '--template-dir jaxrs-spec-templates ' +
           '--additional-properties dateLibrary=java8,useBeanValidation=true,sourceFolder=src/main/java,interfaceOnly=true ' +
           '-o jaxrs-spec-generated/'
@@ -69,49 +68,6 @@ module.exports = function(grunt) {
           execOptions: {
             cwd: 'jaxrs-spec-generated'
           }
-        }
-      },
-      'javascript-generate': {
-        command : 'java -jar swagger-codegen-cli.jar generate ' +
-          '-i ./swagger.yaml ' +
-          '-l javascript ' +
-          '-o javascript-generated/ ' +
-          `--additional-properties useES6=false,usePromises=true,projectName=metamind-client,projectVersion=${JAVASCRIPT_VERSION}`
-      },
-      'javascript-bump-version': {
-        command: 'npm version patch',
-        options: {
-          execOptions: {
-            cwd: 'javascript-generated'
-          }
-        }
-      },
-      'javascript-push': {
-        command : 'git add . && git commit -m "Generated javascript source" ; git push',
-        options: {
-          execOptions: {
-            cwd: 'javascript-generated'
-          }
-        }
-      },
-      'javascript-publish': {
-        command : 'npm publish',
-        options: {
-          execOptions: {
-            cwd: 'javascript-generated'
-          }
-        }
-      }
-    },
-    'javascript-package-update': {
-      'javascript-package': {
-        'fields': {
-          "author": "Metatavu Oy",
-          "repository": {
-            "type": "git",
-            "url": "git://github.com/Metatavu/jouko-api-client.git"
-          },
-          "license": "gpl-3.0"
         }
       }
     }
