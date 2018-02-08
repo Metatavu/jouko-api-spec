@@ -16,4 +16,64 @@ consumes:
 produces:
   - application/json;charset=utf-8
 paths:
+  /interruptions:
+    get:
+      operationId: listInterruptions
+      summary: Lists interruptions
+      parameters:
+        - name: from
+          in: query
+          description: "List interruptions that start after this point of time, inclusive"
+          required: true
+          type: date-time
+        - name: to
+          in: query
+          description: "List interruptions that end before this point of time, exclusive"
+          required: true
+          type: date-time
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Interruption'
+  /interruptions/{id}/cancelled:
+    put:
+      operationId: setInterruptionCancelled
+      summary: "Set interruption's cancellation status"
+      parameters:
+        - name: body
+          in: body
+          description: "The cancellation status"
+          required: true
+          type:
+            $ref: '#/definitions/InterruptionCancellation'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/InterruptionCancellation'
+  /devices:
+    get:
+      operationId: listDevices
+      summary: Lists devices
+      parameters:
+        - name: firstResult
+          in: query
+          description: "The offset of the first result"
+          required: true
+          type: integer
+        - name: maxResults
+          in: query
+          description: "The maximum number of results"
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Device'
 definitions:
