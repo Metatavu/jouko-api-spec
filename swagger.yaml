@@ -7,20 +7,27 @@ schemes:
   - https
 basePath: /v1
 securityDefinitions:
-  basicAuth:
-    type: basic
+  bearer:
+    type: apiKey
+    name: Authorization
+    in: header
 security:
-  - basicAuth: []
+  - bearer: []
 consumes:
   - application/json;charset=utf-8
 produces:
   - application/json;charset=utf-8
 paths:
-  /interruptions:
+  /users/{userid}/interruptions:
     get:
       operationId: listInterruptions
       summary: List interruptions
       parameters:
+        - name: userid
+          in: path
+          description: The user whose interruptions we list
+          required: true
+          type: integer
         - name: from
           in: query
           description: List interruptions that start after this point of time, inclusive
@@ -34,18 +41,31 @@ paths:
           type: string
           format: date-time
       responses:
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        500:
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
         200:
           description: Success
           schema:
             type: array
             items:
               $ref: '#/definitions/Interruption'
-  /interruptions/{id}/cancelled:
+  /users/{userid}/interruptions/{interruptionid}/cancelled:
     put:
       operationId: setInterruptionCancelled
       summary: "Set interruption's cancellation status"
       parameters:
-        - name: id
+        - name: userid
+          in: path
+          description: The user who owns the interruption
+          required: true
+          type: integer
+        - name: interruptionid
           in: path
           description: The id of the interruption to set cancellation status of
           required: true
@@ -57,15 +77,28 @@ paths:
           schema:
             $ref: '#/definitions/InterruptionCancellation'
       responses:
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        500:
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
         200:
           description: Success
           schema:
             $ref: '#/definitions/InterruptionCancellation'
-  /devices:
+  /users/{userid}/devices:
     get:
       operationId: listDevices
       summary: List devices
       parameters:
+        - name: userid
+          in: path
+          description: The user who owns the interruption
+          required: true
+          type: integer
         - name: firstResult
           in: query
           description: "The offset of the first result"
@@ -77,13 +110,75 @@ paths:
           required: true
           type: integer
       responses:
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        500:
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
         200:
           description: Success
           schema:
             type: array
             items:
               $ref: '#/definitions/Device'
+  /users/{userid}/devices/{deviceid}/powerConsumption:
+    get:
+      operationId: getPowerConsumption
+      summary: Get the power consumption of the given device in a time period
+      parameters:
+        - name: userid
+          in: path
+          description: The user that owns the device
+          required: true
+          type: integer
+        - name: userid
+          in: path
+          description: The device whose power consumption we measure
+          required: true
+          type: integer
+        - name: from
+          in: query
+          description: The start of the time period that we measure the consumption in, inclusive
+          required: true
+          type: string
+          format: date-time
+        - name: to
+          in: query
+          description: The end of the time period that we measure the consumption in, exclusive
+          required: true
+          type: string
+          format: date-time
+      responses:
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        500:
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DevicePowerConsumption'
 definitions:
+  Unauthorized:
+    type: object
+    properties:
+      message:
+        description: The error message
+        type: string
+  InternalServerError:
+    type: object
+    properties:
+      message:
+        description: The error message
+        type: string
   Interruption:
     type: object
     properties:
@@ -122,4 +217,10 @@ definitions:
       name:
         description: The name of the device
         type: string
+  DevicePowerConsumption:
+    type: object
+    properties:
+      consumptionInWatts:
+        description: The power consumption in the given time span, in watts
+        type: number
       
