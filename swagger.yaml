@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   title: Jouko API
   description: Jouko API spec
-  version: "0.0.1"
+  version: 0.0.1
 schemes:
   - https
 basePath: /v1
@@ -18,58 +18,71 @@ consumes:
 produces:
   - application/json;charset=utf-8
 paths:
-  /users/{userid}/interruptions:
+  '/users/{userId}/interruptions':
     get:
       operationId: listInterruptions
+      tags:
+        - Interruptions
       summary: List interruptions
       parameters:
-        - name: userid
+        - name: userId
           in: path
           description: The user whose interruptions we list
           required: true
-          type: integer
-        - name: from
+          type: string
+          format: uuid
+        - name: fromTime
           in: query
           description: List interruptions that start after this point of time, inclusive
           required: true
           type: string
           format: date-time
-        - name: to
+        - name: toTime
           in: query
           description: List interruptions that end before this point of time, exclusive
           required: true
           type: string
           format: date-time
+        - name: deviceId
+          in: query
+          description: The device id whose interruptions we list, list all if omitted
+          required: false
+          type: string
+          format: uuid
       responses:
-        401:
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/Unauthorized'
-        500:
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/InternalServerError'
-        200:
+        '200':
           description: Success
           schema:
             type: array
             items:
               $ref: '#/definitions/Interruption'
-  /users/{userid}/interruptions/{interruptionid}/cancelled:
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
+  '/users/{userId}/interruptions/{interruptionId}/cancelled':
     put:
       operationId: setInterruptionCancelled
-      summary: "Set interruption's cancellation status"
+      tags:
+        - Interruptions
+      summary: Set interruption's cancellation status
       parameters:
-        - name: userid
+        - name: userId
           in: path
           description: The user who owns the interruption
           required: true
-          type: integer
-        - name: interruptionid
+          type: string
+          format: uuid
+        - name: interruptionId
           in: path
           description: The id of the interruption to set cancellation status of
           required: true
-          type: integer
+          type: string
+          format: uuid
         - name: body
           in: body
           description: The cancellation status
@@ -77,121 +90,138 @@ paths:
           schema:
             $ref: '#/definitions/InterruptionCancellation'
       responses:
-        401:
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/Unauthorized'
-        500:
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/InternalServerError'
-        200:
+        '200':
           description: Success
           schema:
             $ref: '#/definitions/InterruptionCancellation'
-  /users/{userid}/devices:
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
+  '/users/{userId}/devices':
     get:
       operationId: listDevices
+      tags:
+        - Devices
       summary: List devices
       parameters:
-        - name: userid
+        - name: userId
           in: path
           description: The user who owns the interruption
           required: true
-          type: integer
+          type: string
+          format: uuid
         - name: firstResult
           in: query
-          description: "The offset of the first result"
+          description: The offset of the first result
           required: true
           type: integer
         - name: maxResults
           in: query
-          description: "The maximum number of results"
+          description: The maximum number of results
           required: true
           type: integer
       responses:
-        401:
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/Unauthorized'
-        500:
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/InternalServerError'
-        200:
+        '200':
           description: Success
           schema:
             type: array
             items:
               $ref: '#/definitions/Device'
-  /users/{userid}/devices/{deviceid}/powerConsumption:
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
+  '/users/{userId}/devices/{deviceId}/powerConsumption':
     get:
       operationId: getPowerConsumption
+      tags:
+        - Devices
       summary: Get the power consumption of the given device in a time period
       parameters:
-        - name: userid
+        - name: userId
           in: path
           description: The user that owns the device
           required: true
-          type: integer
-        - name: userid
+          type: string
+          format: uuid
+        - name: deviceId
           in: path
           description: The device whose power consumption we measure
           required: true
-          type: integer
-        - name: from
+          type: string
+          format: uuid
+        - name: fromTime
           in: query
-          description: The start of the time period that we measure the consumption in, inclusive
+          description: >-
+            The start of the time period that we measure the consumption in,
+            inclusive
           required: true
           type: string
           format: date-time
-        - name: to
+        - name: toTime
           in: query
-          description: The end of the time period that we measure the consumption in, exclusive
+          description: >-
+            The end of the time period that we measure the consumption in,
+            exclusive
           required: true
           type: string
           format: date-time
       responses:
-        401:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/DevicePowerConsumption'
+        '401':
           description: Unauthorized
           schema:
             $ref: '#/definitions/Unauthorized'
-        500:
+        '500':
           description: Internal server error
           schema:
             $ref: '#/definitions/InternalServerError'
-        200:
-          description: Success
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/DevicePowerConsumption'
 definitions:
   Unauthorized:
     type: object
+    required: [message]
     properties:
       message:
         description: The error message
         type: string
   InternalServerError:
     type: object
+    required: [message]
     properties:
       message:
         description: The error message
         type: string
   Interruption:
     type: object
+    required:
+      - id
+      - startTime
+      - endTime
+      - deviceId
+      - cancelled
     properties:
       id:
         description: Interruption id
         type: string
         format: uuid
-      from:
-        description: Start time of the interruption, inclusive
+      startTime:
+        description: 'Start time of the interruption, inclusive'
         type: string
         format: date-time
-      to:
-        description: End time of the interruption, exclusive
+      endTime:
+        description: 'End time of the interruption, exclusive'
         type: string
         format: date-time
       deviceId:
@@ -201,14 +231,22 @@ definitions:
       cancelled:
         description: True if the interruption has been cancelled
         type: boolean
+      cancellationTime:
+        description: The time when the interruption was cancelled
+        type: string
+        format: date-time
   InterruptionCancellation:
     type: object
+    required: [cancelled]
     properties:
       cancelled:
         description: True if the interruption has been cancelled
         type: boolean
   Device:
     type: object
+    required:
+      - id
+      - name
     properties:
       id:
         description: Interruption id
@@ -219,8 +257,9 @@ definitions:
         type: string
   DevicePowerConsumption:
     type: object
+    required: [averageConsumptionInWatts]
     properties:
-      consumptionInWatts:
-        description: The power consumption in the given time span, in watts
+      averageConsumptionInWatts:
+        description: 'The power consumption in the given time span, in watts'
         type: number
-      
+        format: double
