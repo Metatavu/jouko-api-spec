@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   title: Jouko API
   description: Jouko API spec
-  version: 0.0.1
+  version: 0.0.3
 schemes:
   - https
 basePath: /v1
@@ -29,8 +29,7 @@ paths:
           in: path
           description: The user whose interruptions we list
           required: true
-          type: string
-          format: uuid
+          type: integer
         - name: fromTime
           in: query
           description: List interruptions that start after this point of time, inclusive
@@ -47,8 +46,7 @@ paths:
           in: query
           description: The device id whose interruptions we list, list all if omitted
           required: false
-          type: string
-          format: uuid
+          type: integer
       responses:
         '200':
           description: Success
@@ -75,14 +73,12 @@ paths:
           in: path
           description: The user who owns the interruption
           required: true
-          type: string
-          format: uuid
+          type: integer
         - name: interruptionId
           in: path
           description: The id of the interruption to set cancellation status of
           required: true
-          type: string
-          format: uuid
+          type: integer
         - name: body
           in: body
           description: The cancellation status
@@ -113,8 +109,7 @@ paths:
           in: path
           description: The user who owns the interruption
           required: true
-          type: string
-          format: uuid
+          type: integer
         - name: firstResult
           in: query
           description: The offset of the first result
@@ -151,14 +146,12 @@ paths:
           in: path
           description: The user that owns the device
           required: true
-          type: string
-          format: uuid
+          type: integer
         - name: deviceId
           in: path
           description: The device whose power consumption we measure
           required: true
-          type: string
-          format: uuid
+          type: integer
         - name: fromTime
           in: query
           description: >-
@@ -214,8 +207,7 @@ definitions:
     properties:
       id:
         description: Interruption id
-        type: string
-        format: uuid
+        type: integer
       startTime:
         description: 'Start time of the interruption, inclusive'
         type: string
@@ -226,8 +218,7 @@ definitions:
         format: date-time
       deviceId:
         description: The ID of the interrupted device
-        type: string
-        format: uuid
+        type: integer
       cancelled:
         description: True if the interruption has been cancelled
         type: boolean
@@ -250,8 +241,7 @@ definitions:
     properties:
       id:
         description: Interruption id
-        type: string
-        format: uuid
+        type: integer
       name:
         description: The name of the device
         type: string
