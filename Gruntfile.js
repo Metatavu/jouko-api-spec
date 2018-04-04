@@ -69,15 +69,44 @@ module.exports = function(grunt) {
             cwd: 'jaxrs-spec-generated'
           }
         }
+      },
+      'typescript-generate': {
+        command : 'java -jar swagger-codegen-cli.jar generate ' +
+          '-i ./swagger.yaml ' +
+          '-l typescript-fetch ' +
+          '-o typescript-generated/ ' +
+          '--additional-properties projectName=jouko-api-ts-client,npmName=jouko-ts-client,npmVersion=' + require('./typescript-generated/package.json').version
+      },
+      'typescript-bump-version': {
+        command: 'npm version patch',
+        options: {
+          execOptions: {
+            cwd: 'typescript-generated'
+          }
+        }
+      },
+      'typescript-push': {
+        command : 'git add . && git commit -m "Generated javascript source" && git push',
+        options: {
+          execOptions: {
+            cwd: 'typescript-generated'
+          }
+        }
+      },
+    },
+    'publish': {
+      'publish-typescript-client': {
+        src: ['typescript-generated']
       }
     }
   });
   
   grunt.registerTask('download-dependencies', 'if-missing:curl:swagger-codegen');
-  grunt.registerTask('javascript-gen', [ 'download-dependencies', 'shell:javascript-generate', 'javascript-package-update:javascript-package' ]);
-  grunt.registerTask('javascript', [ 'javascript-gen', 'shell:javascript-bump-version', 'shell:javascript-push', 'shell:javascript-publish']);
+  grunt.registerTask('typescript-gen', [ 'download-dependencies', 'shell:typescript-generate']);
+  grunt.registerTask('typescript', ['typescript-gen', 'shell:typescript-bump-version', 'shell:typescript-push', 'publish:publish-typescript-client']);
   grunt.registerTask('jaxrs-gen', [ 'download-dependencies', 'clean:jaxrs-spec-sources', 'shell:jaxrs-spec-generate', 'clean:jaxrs-spec-cruft', 'shell:jaxrs-spec-install' ]);
   grunt.registerTask('jaxrs-spec', [ 'jaxrs-gen', 'shell:jaxrs-spec-release' ]);
+  grunt.registerTask('ts-client', ['shell:ts-client-generate']);
   
   grunt.registerTask('default', ['jaxrs-spec' ]);
   
