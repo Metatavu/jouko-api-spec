@@ -1,0 +1,506 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "Jouko API spec",
+    "version" : "0.0.4",
+    "title" : "Jouko API"
+  },
+  "basePath" : "/v1",
+  "schemes" : [ "https" ],
+  "consumes" : [ "application/json;charset=utf-8" ],
+  "produces" : [ "application/json;charset=utf-8" ],
+  "security" : [ {
+    "bearer" : [ ]
+  } ],
+  "paths" : {
+    "/admin/interruptiongroups/" : {
+      "get" : {
+        "tags" : [ "Interruption Groups" ],
+        "summary" : "List interruption groups",
+        "operationId" : "listInterruptionGroups",
+        "parameters" : [ {
+          "name" : "firstResult",
+          "in" : "query",
+          "description" : "The offset of the first result",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "maxResults",
+          "in" : "query",
+          "description" : "The maximum number of results",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/InterruptionGroup"
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "schema" : {
+              "$ref" : "#/definitions/Unauthorized"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Interruption Groups" ],
+        "summary" : "Create interruption group",
+        "operationId" : "createInterruptionGroup",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "The cancellation status",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/InterruptionGroup"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/InterruptionGroup"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "schema" : {
+              "$ref" : "#/definitions/Unauthorized"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    },
+    "/admin/interruptiongroups/{groupId}" : {
+      "get" : {
+        "tags" : [ "Interruptions" ],
+        "summary" : "Retreive interruption group",
+        "operationId" : "retrieveInterruptionGroup",
+        "parameters" : [ {
+          "name" : "groupId",
+          "in" : "path",
+          "description" : "The id of the interruption group",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/InterruptionGroup"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "schema" : {
+              "$ref" : "#/definitions/Unauthorized"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Interruptions" ],
+        "summary" : "Update interruption group",
+        "operationId" : "updateInterruptionGroup",
+        "parameters" : [ {
+          "name" : "groupId",
+          "in" : "path",
+          "description" : "The id of the interruption group",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "The cancellation status",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/InterruptionGroup"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/InterruptionGroup"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "schema" : {
+              "$ref" : "#/definitions/Unauthorized"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}/interruptions" : {
+      "get" : {
+        "tags" : [ "Interruptions" ],
+        "summary" : "List interruptions",
+        "operationId" : "listInterruptions",
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "The user whose interruptions we list",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "fromTime",
+          "in" : "query",
+          "description" : "List interruptions that start after this point of time, inclusive",
+          "required" : true,
+          "type" : "string",
+          "format" : "date-time"
+        }, {
+          "name" : "toTime",
+          "in" : "query",
+          "description" : "List interruptions that end before this point of time, exclusive",
+          "required" : true,
+          "type" : "string",
+          "format" : "date-time"
+        }, {
+          "name" : "deviceId",
+          "in" : "query",
+          "description" : "The device id whose interruptions we list, list all if omitted",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Interruption"
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "schema" : {
+              "$ref" : "#/definitions/Unauthorized"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}/interruptions/{interruptionId}/cancelled" : {
+      "put" : {
+        "tags" : [ "Interruptions" ],
+        "summary" : "Set interruption's cancellation status",
+        "operationId" : "setInterruptionCancelled",
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "The user who owns the interruption",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "interruptionId",
+          "in" : "path",
+          "description" : "The id of the interruption to set cancellation status of",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "The cancellation status",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/InterruptionCancellation"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/InterruptionCancellation"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "schema" : {
+              "$ref" : "#/definitions/Unauthorized"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}/devices" : {
+      "get" : {
+        "tags" : [ "Devices" ],
+        "summary" : "List devices",
+        "operationId" : "listDevices",
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "The user who owns the interruption",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "firstResult",
+          "in" : "query",
+          "description" : "The offset of the first result",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "maxResults",
+          "in" : "query",
+          "description" : "The maximum number of results",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Device"
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "schema" : {
+              "$ref" : "#/definitions/Unauthorized"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}/devices/{deviceId}/powerConsumption" : {
+      "get" : {
+        "tags" : [ "Devices" ],
+        "summary" : "Get the power consumption of the given device in a time period",
+        "operationId" : "getPowerConsumption",
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "The user that owns the device",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "deviceId",
+          "in" : "path",
+          "description" : "The device whose power consumption we measure",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "fromTime",
+          "in" : "query",
+          "description" : "The start of the time period that we measure the consumption in, inclusive",
+          "required" : true,
+          "type" : "string",
+          "format" : "date-time"
+        }, {
+          "name" : "toTime",
+          "in" : "query",
+          "description" : "The end of the time period that we measure the consumption in, exclusive",
+          "required" : true,
+          "type" : "string",
+          "format" : "date-time"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/DevicePowerConsumption"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "schema" : {
+              "$ref" : "#/definitions/Unauthorized"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "bearer" : {
+      "type" : "apiKey",
+      "name" : "Authorization",
+      "in" : "header"
+    }
+  },
+  "definitions" : {
+    "Unauthorized" : {
+      "type" : "object",
+      "required" : [ "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "The error message"
+        }
+      }
+    },
+    "InternalServerError" : {
+      "type" : "object",
+      "required" : [ "message" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "The error message"
+        }
+      }
+    },
+    "InterruptionGroup" : {
+      "type" : "object",
+      "required" : [ "endTime", "id", "startTime" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Interruption id"
+        },
+        "startTime" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Start time of the interruption, inclusive"
+        },
+        "endTime" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "End time of the interruption, exclusive"
+        }
+      }
+    },
+    "Interruption" : {
+      "type" : "object",
+      "required" : [ "cancelled", "deviceId", "endTime", "id", "startTime" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Interruption id"
+        },
+        "startTime" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Start time of the interruption, inclusive"
+        },
+        "endTime" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "End time of the interruption, exclusive"
+        },
+        "deviceId" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "The ID of the interrupted device"
+        },
+        "cancelled" : {
+          "type" : "boolean",
+          "description" : "True if the interruption has been cancelled"
+        },
+        "cancellationTime" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "The time when the interruption was cancelled"
+        }
+      }
+    },
+    "InterruptionCancellation" : {
+      "type" : "object",
+      "required" : [ "cancelled" ],
+      "properties" : {
+        "cancelled" : {
+          "type" : "boolean",
+          "description" : "True if the interruption has been cancelled"
+        }
+      }
+    },
+    "Device" : {
+      "type" : "object",
+      "required" : [ "id", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Device id"
+        },
+        "name" : {
+          "type" : "string",
+          "description" : "The name of the device"
+        }
+      }
+    },
+    "DevicePowerConsumption" : {
+      "type" : "object",
+      "required" : [ "averageConsumptionInWatts" ],
+      "properties" : {
+        "averageConsumptionInWatts" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "The power consumption in the given time span, in watts"
+        }
+      }
+    }
+  }
+}
