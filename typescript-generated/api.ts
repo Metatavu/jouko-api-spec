@@ -1,3 +1,4 @@
+/// <reference path="./custom.d.ts" />
 // tslint:disable
 /**
  * Jouko API
@@ -13,7 +14,7 @@
 
 
 import * as url from "url";
-import * as isomorphicFetch from "isomorphic-fetch";
+import * as portableFetch from "portable-fetch";
 import { Configuration } from "./configuration";
 
 const BASE_PATH = "https://localhost/v1".replace(/\/+$/, "");
@@ -35,7 +36,7 @@ export const COLLECTION_FORMATS = {
  * @interface FetchAPI
  */
 export interface FetchAPI {
-    (url: string, init?: any): Promise<any>;
+    (url: string, init?: any): Promise<Response>;
 }
 
 /**
@@ -56,7 +57,7 @@ export interface FetchArgs {
 export class BaseAPI {
     protected configuration: Configuration;
 
-    constructor(configuration?: Configuration, protected basePath: string = BASE_PATH, protected fetch: FetchAPI = isomorphicFetch) {
+    constructor(configuration?: Configuration, protected basePath: string = BASE_PATH, protected fetch: FetchAPI = portableFetch) {
         if (configuration) {
             this.configuration = configuration;
             this.basePath = configuration.basePath || this.basePath;
@@ -257,38 +258,38 @@ export const DevicesApiFetchParamCreator = function (configuration?: Configurati
             if (toTime === null || toTime === undefined) {
                 throw new RequiredError('toTime','Required parameter toTime was null or undefined when calling getPowerConsumption.');
             }
-            const path = `/users/{userId}/devices/{deviceId}/powerConsumption`
-                .replace(`{${"userId"}}`, String(userId))
-                .replace(`{${"deviceId"}}`, String(deviceId));
-            const urlObj = url.parse(path, true);
-            const requestOptions = Object.assign({ method: 'GET' }, options);
-            const headerParameter = {} as any;
-            const queryParameter = {} as any;
+            const localVarPath = `/users/{userId}/devices/{deviceId}/powerConsumption`
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)))
+                .replace(`{${"deviceId"}}`, encodeURIComponent(String(deviceId)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
             // authentication bearer required
             if (configuration && configuration.apiKey) {
-                const apiKeyValue = typeof configuration.apiKey === 'function'
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
 					? configuration.apiKey("Authorization")
 					: configuration.apiKey;
-                headerParameter["Authorization"] = apiKeyValue;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
             }
 
             if (fromTime !== undefined) {
-                queryParameter['fromTime'] = (fromTime as any).toISOString();
+                localVarQueryParameter['fromTime'] = fromTime;
             }
 
             if (toTime !== undefined) {
-                queryParameter['toTime'] = (toTime as any).toISOString();
+                localVarQueryParameter['toTime'] = toTime;
             }
 
-            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete urlObj.search;
-            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
 
             return {
-                url: url.format(urlObj),
-                options: requestOptions,
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
             };
         },
         /**
@@ -313,37 +314,37 @@ export const DevicesApiFetchParamCreator = function (configuration?: Configurati
             if (maxResults === null || maxResults === undefined) {
                 throw new RequiredError('maxResults','Required parameter maxResults was null or undefined when calling listDevices.');
             }
-            const path = `/users/{userId}/devices`
-                .replace(`{${"userId"}}`, String(userId));
-            const urlObj = url.parse(path, true);
-            const requestOptions = Object.assign({ method: 'GET' }, options);
-            const headerParameter = {} as any;
-            const queryParameter = {} as any;
+            const localVarPath = `/users/{userId}/devices`
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
             // authentication bearer required
             if (configuration && configuration.apiKey) {
-                const apiKeyValue = typeof configuration.apiKey === 'function'
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
 					? configuration.apiKey("Authorization")
 					: configuration.apiKey;
-                headerParameter["Authorization"] = apiKeyValue;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
             }
 
             if (firstResult !== undefined) {
-                queryParameter['firstResult'] = firstResult;
+                localVarQueryParameter['firstResult'] = firstResult;
             }
 
             if (maxResults !== undefined) {
-                queryParameter['maxResults'] = maxResults;
+                localVarQueryParameter['maxResults'] = maxResults;
             }
 
-            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete urlObj.search;
-            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
 
             return {
-                url: url.format(urlObj),
-                options: requestOptions,
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
             };
         },
     }
@@ -366,9 +367,9 @@ export const DevicesApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         getPowerConsumption(userId: number, deviceId: number, fromTime: string, toTime: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<DevicePowerConsumption> {
-            const fetchArgs = DevicesApiFetchParamCreator(configuration).getPowerConsumption(userId, deviceId, fromTime, toTime, options);
-            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+            const localVarFetchArgs = DevicesApiFetchParamCreator(configuration).getPowerConsumption(userId, deviceId, fromTime, toTime, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
                         return response.json();
                     } else {
@@ -387,9 +388,9 @@ export const DevicesApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         listDevices(userId: number, firstResult: number, maxResults: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Device>> {
-            const fetchArgs = DevicesApiFetchParamCreator(configuration).listDevices(userId, firstResult, maxResults, options);
-            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+            const localVarFetchArgs = DevicesApiFetchParamCreator(configuration).listDevices(userId, firstResult, maxResults, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
                         return response.json();
                     } else {
@@ -491,31 +492,32 @@ export const InterruptionGroupsApiFetchParamCreator = function (configuration?: 
             if (body === null || body === undefined) {
                 throw new RequiredError('body','Required parameter body was null or undefined when calling createInterruptionGroup.');
             }
-            const path = `/admin/interruptiongroups/`;
-            const urlObj = url.parse(path, true);
-            const requestOptions = Object.assign({ method: 'POST' }, options);
-            const headerParameter = {} as any;
-            const queryParameter = {} as any;
+            const localVarPath = `/admin/interruptiongroups/`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
             // authentication bearer required
             if (configuration && configuration.apiKey) {
-                const apiKeyValue = typeof configuration.apiKey === 'function'
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
 					? configuration.apiKey("Authorization")
 					: configuration.apiKey;
-                headerParameter["Authorization"] = apiKeyValue;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
             }
 
-            headerParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json;charset=utf-8';
 
-            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete urlObj.search;
-            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
-            requestOptions.body = JSON.stringify(body || {});
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"InterruptionGroup" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
 
             return {
-                url: url.format(urlObj),
-                options: requestOptions,
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
             };
         },
         /**
@@ -535,36 +537,36 @@ export const InterruptionGroupsApiFetchParamCreator = function (configuration?: 
             if (maxResults === null || maxResults === undefined) {
                 throw new RequiredError('maxResults','Required parameter maxResults was null or undefined when calling listInterruptionGroups.');
             }
-            const path = `/admin/interruptiongroups/`;
-            const urlObj = url.parse(path, true);
-            const requestOptions = Object.assign({ method: 'GET' }, options);
-            const headerParameter = {} as any;
-            const queryParameter = {} as any;
+            const localVarPath = `/admin/interruptiongroups/`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
             // authentication bearer required
             if (configuration && configuration.apiKey) {
-                const apiKeyValue = typeof configuration.apiKey === 'function'
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
 					? configuration.apiKey("Authorization")
 					: configuration.apiKey;
-                headerParameter["Authorization"] = apiKeyValue;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
             }
 
             if (firstResult !== undefined) {
-                queryParameter['firstResult'] = firstResult;
+                localVarQueryParameter['firstResult'] = firstResult;
             }
 
             if (maxResults !== undefined) {
-                queryParameter['maxResults'] = maxResults;
+                localVarQueryParameter['maxResults'] = maxResults;
             }
 
-            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete urlObj.search;
-            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
 
             return {
-                url: url.format(urlObj),
-                options: requestOptions,
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
             };
         },
     }
@@ -584,9 +586,9 @@ export const InterruptionGroupsApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         createInterruptionGroup(body: InterruptionGroup, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<InterruptionGroup> {
-            const fetchArgs = InterruptionGroupsApiFetchParamCreator(configuration).createInterruptionGroup(body, options);
-            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+            const localVarFetchArgs = InterruptionGroupsApiFetchParamCreator(configuration).createInterruptionGroup(body, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
                         return response.json();
                     } else {
@@ -604,9 +606,9 @@ export const InterruptionGroupsApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         listInterruptionGroups(firstResult: number, maxResults: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<InterruptionGroup>> {
-            const fetchArgs = InterruptionGroupsApiFetchParamCreator(configuration).listInterruptionGroups(firstResult, maxResults, options);
-            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+            const localVarFetchArgs = InterruptionGroupsApiFetchParamCreator(configuration).listInterruptionGroups(firstResult, maxResults, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
                         return response.json();
                     } else {
@@ -711,41 +713,41 @@ export const InterruptionsApiFetchParamCreator = function (configuration?: Confi
             if (toTime === null || toTime === undefined) {
                 throw new RequiredError('toTime','Required parameter toTime was null or undefined when calling listInterruptions.');
             }
-            const path = `/users/{userId}/interruptions`
-                .replace(`{${"userId"}}`, String(userId));
-            const urlObj = url.parse(path, true);
-            const requestOptions = Object.assign({ method: 'GET' }, options);
-            const headerParameter = {} as any;
-            const queryParameter = {} as any;
+            const localVarPath = `/users/{userId}/interruptions`
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
             // authentication bearer required
             if (configuration && configuration.apiKey) {
-                const apiKeyValue = typeof configuration.apiKey === 'function'
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
 					? configuration.apiKey("Authorization")
 					: configuration.apiKey;
-                headerParameter["Authorization"] = apiKeyValue;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
             }
 
             if (fromTime !== undefined) {
-                queryParameter['fromTime'] = (fromTime as any).toISOString();
+                localVarQueryParameter['fromTime'] = fromTime;
             }
 
             if (toTime !== undefined) {
-                queryParameter['toTime'] = (toTime as any).toISOString();
+                localVarQueryParameter['toTime'] = toTime;
             }
 
             if (deviceId !== undefined) {
-                queryParameter['deviceId'] = deviceId;
+                localVarQueryParameter['deviceId'] = deviceId;
             }
 
-            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete urlObj.search;
-            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
 
             return {
-                url: url.format(urlObj),
-                options: requestOptions,
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
             };
         },
         /**
@@ -760,29 +762,29 @@ export const InterruptionsApiFetchParamCreator = function (configuration?: Confi
             if (groupId === null || groupId === undefined) {
                 throw new RequiredError('groupId','Required parameter groupId was null or undefined when calling retrieveInterruptionGroup.');
             }
-            const path = `/admin/interruptiongroups/{groupId}`
-                .replace(`{${"groupId"}}`, String(groupId));
-            const urlObj = url.parse(path, true);
-            const requestOptions = Object.assign({ method: 'GET' }, options);
-            const headerParameter = {} as any;
-            const queryParameter = {} as any;
+            const localVarPath = `/admin/interruptiongroups/{groupId}`
+                .replace(`{${"groupId"}}`, encodeURIComponent(String(groupId)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
             // authentication bearer required
             if (configuration && configuration.apiKey) {
-                const apiKeyValue = typeof configuration.apiKey === 'function'
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
 					? configuration.apiKey("Authorization")
 					: configuration.apiKey;
-                headerParameter["Authorization"] = apiKeyValue;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
             }
 
-            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete urlObj.search;
-            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
 
             return {
-                url: url.format(urlObj),
-                options: requestOptions,
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
             };
         },
         /**
@@ -807,33 +809,34 @@ export const InterruptionsApiFetchParamCreator = function (configuration?: Confi
             if (body === null || body === undefined) {
                 throw new RequiredError('body','Required parameter body was null or undefined when calling setInterruptionCancelled.');
             }
-            const path = `/users/{userId}/interruptions/{interruptionId}/cancelled`
-                .replace(`{${"userId"}}`, String(userId))
-                .replace(`{${"interruptionId"}}`, String(interruptionId));
-            const urlObj = url.parse(path, true);
-            const requestOptions = Object.assign({ method: 'PUT' }, options);
-            const headerParameter = {} as any;
-            const queryParameter = {} as any;
+            const localVarPath = `/users/{userId}/interruptions/{interruptionId}/cancelled`
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)))
+                .replace(`{${"interruptionId"}}`, encodeURIComponent(String(interruptionId)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
             // authentication bearer required
             if (configuration && configuration.apiKey) {
-                const apiKeyValue = typeof configuration.apiKey === 'function'
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
 					? configuration.apiKey("Authorization")
 					: configuration.apiKey;
-                headerParameter["Authorization"] = apiKeyValue;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
             }
 
-            headerParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json;charset=utf-8';
 
-            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete urlObj.search;
-            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
-            requestOptions.body = JSON.stringify(body || {});
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"InterruptionCancellation" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
 
             return {
-                url: url.format(urlObj),
-                options: requestOptions,
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
             };
         },
         /**
@@ -853,32 +856,33 @@ export const InterruptionsApiFetchParamCreator = function (configuration?: Confi
             if (body === null || body === undefined) {
                 throw new RequiredError('body','Required parameter body was null or undefined when calling updateInterruptionGroup.');
             }
-            const path = `/admin/interruptiongroups/{groupId}`
-                .replace(`{${"groupId"}}`, String(groupId));
-            const urlObj = url.parse(path, true);
-            const requestOptions = Object.assign({ method: 'PUT' }, options);
-            const headerParameter = {} as any;
-            const queryParameter = {} as any;
+            const localVarPath = `/admin/interruptiongroups/{groupId}`
+                .replace(`{${"groupId"}}`, encodeURIComponent(String(groupId)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'PUT' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
             // authentication bearer required
             if (configuration && configuration.apiKey) {
-                const apiKeyValue = typeof configuration.apiKey === 'function'
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
 					? configuration.apiKey("Authorization")
 					: configuration.apiKey;
-                headerParameter["Authorization"] = apiKeyValue;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
             }
 
-            headerParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Content-Type'] = 'application/json;charset=utf-8';
 
-            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete urlObj.search;
-            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
-            requestOptions.body = JSON.stringify(body || {});
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"InterruptionGroup" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
 
             return {
-                url: url.format(urlObj),
-                options: requestOptions,
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
             };
         },
     }
@@ -901,9 +905,9 @@ export const InterruptionsApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         listInterruptions(userId: number, fromTime: string, toTime: string, deviceId?: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Interruption>> {
-            const fetchArgs = InterruptionsApiFetchParamCreator(configuration).listInterruptions(userId, fromTime, toTime, deviceId, options);
-            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+            const localVarFetchArgs = InterruptionsApiFetchParamCreator(configuration).listInterruptions(userId, fromTime, toTime, deviceId, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
                         return response.json();
                     } else {
@@ -920,9 +924,9 @@ export const InterruptionsApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         retrieveInterruptionGroup(groupId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<InterruptionGroup> {
-            const fetchArgs = InterruptionsApiFetchParamCreator(configuration).retrieveInterruptionGroup(groupId, options);
-            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+            const localVarFetchArgs = InterruptionsApiFetchParamCreator(configuration).retrieveInterruptionGroup(groupId, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
                         return response.json();
                     } else {
@@ -941,9 +945,9 @@ export const InterruptionsApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         setInterruptionCancelled(userId: number, interruptionId: number, body: InterruptionCancellation, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<InterruptionCancellation> {
-            const fetchArgs = InterruptionsApiFetchParamCreator(configuration).setInterruptionCancelled(userId, interruptionId, body, options);
-            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+            const localVarFetchArgs = InterruptionsApiFetchParamCreator(configuration).setInterruptionCancelled(userId, interruptionId, body, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
                         return response.json();
                     } else {
@@ -961,9 +965,9 @@ export const InterruptionsApiFp = function(configuration?: Configuration) {
          * @throws {RequiredError}
          */
         updateInterruptionGroup(groupId: number, body: InterruptionGroup, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<InterruptionGroup> {
-            const fetchArgs = InterruptionsApiFetchParamCreator(configuration).updateInterruptionGroup(groupId, body, options);
-            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+            const localVarFetchArgs = InterruptionsApiFetchParamCreator(configuration).updateInterruptionGroup(groupId, body, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
                         return response.json();
                     } else {
