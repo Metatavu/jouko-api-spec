@@ -139,16 +139,16 @@ export interface Interruption {
     id: number;
     /**
      * Start time of the interruption, inclusive
-     * @type {String}
+     * @type {string}
      * @memberof Interruption
      */
-    startTime: String;
+    startTime: string;
     /**
      * End time of the interruption, exclusive
-     * @type {String}
+     * @type {string}
      * @memberof Interruption
      */
-    endTime: String;
+    endTime: string;
     /**
      * The ID of the interrupted device
      * @type {number}
@@ -163,10 +163,10 @@ export interface Interruption {
     cancelled: boolean;
     /**
      * The time when the interruption was cancelled
-     * @type {String}
+     * @type {string}
      * @memberof Interruption
      */
-    cancellationTime?: String;
+    cancellationTime?: string;
 }
 
 /**
@@ -197,16 +197,16 @@ export interface InterruptionGroup {
     id: number;
     /**
      * Start time of the interruption, inclusive
-     * @type {String}
+     * @type {string}
      * @memberof InterruptionGroup
      */
-    startTime: String;
+    startTime: string;
     /**
      * End time of the interruption, exclusive
-     * @type {String}
+     * @type {string}
      * @memberof InterruptionGroup
      */
-    endTime: String;
+    endTime: string;
 }
 
 /**
@@ -235,12 +235,12 @@ export const DevicesApiFetchParamCreator = function (configuration?: Configurati
          * @summary Get the power consumption of the given device in a time period
          * @param {number} userId The user that owns the device
          * @param {number} deviceId The device whose power consumption we measure
-         * @param {String} fromTime The start of the time period that we measure the consumption in, inclusive
-         * @param {String} toTime The end of the time period that we measure the consumption in, exclusive
+         * @param {string} fromTime The start of the time period that we measure the consumption in, inclusive
+         * @param {string} toTime The end of the time period that we measure the consumption in, exclusive
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPowerConsumption(userId: number, deviceId: number, fromTime: String, toTime: String, options: any = {}): FetchArgs {
+        getPowerConsumption(userId: number, deviceId: number, fromTime: string, toTime: string, options: any = {}): FetchArgs {
             // verify required parameter 'userId' is not null or undefined
             if (userId === null || userId === undefined) {
                 throw new RequiredError('userId','Required parameter userId was null or undefined when calling getPowerConsumption.');
@@ -360,12 +360,12 @@ export const DevicesApiFp = function(configuration?: Configuration) {
          * @summary Get the power consumption of the given device in a time period
          * @param {number} userId The user that owns the device
          * @param {number} deviceId The device whose power consumption we measure
-         * @param {String} fromTime The start of the time period that we measure the consumption in, inclusive
-         * @param {String} toTime The end of the time period that we measure the consumption in, exclusive
+         * @param {string} fromTime The start of the time period that we measure the consumption in, inclusive
+         * @param {string} toTime The end of the time period that we measure the consumption in, exclusive
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPowerConsumption(userId: number, deviceId: number, fromTime: String, toTime: String, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<DevicePowerConsumption> {
+        getPowerConsumption(userId: number, deviceId: number, fromTime: string, toTime: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<DevicePowerConsumption> {
             const fetchArgs = DevicesApiFetchParamCreator(configuration).getPowerConsumption(userId, deviceId, fromTime, toTime, options);
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
@@ -412,12 +412,12 @@ export const DevicesApiFactory = function (configuration?: Configuration, fetch?
          * @summary Get the power consumption of the given device in a time period
          * @param {number} userId The user that owns the device
          * @param {number} deviceId The device whose power consumption we measure
-         * @param {String} fromTime The start of the time period that we measure the consumption in, inclusive
-         * @param {String} toTime The end of the time period that we measure the consumption in, exclusive
+         * @param {string} fromTime The start of the time period that we measure the consumption in, inclusive
+         * @param {string} toTime The end of the time period that we measure the consumption in, exclusive
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPowerConsumption(userId: number, deviceId: number, fromTime: String, toTime: String, options?: any) {
+        getPowerConsumption(userId: number, deviceId: number, fromTime: string, toTime: string, options?: any) {
             return DevicesApiFp(configuration).getPowerConsumption(userId, deviceId, fromTime, toTime, options)(fetch, basePath);
         },
         /**
@@ -453,7 +453,7 @@ export class DevicesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof DevicesApi
      */
-    public getPowerConsumption(userId: number, deviceId: number, fromTime: String, toTime: String, options?: any) {
+    public getPowerConsumption(userId: number, deviceId: number, fromTime: string, toTime: string, options?: any) {
         return DevicesApiFp(this.configuration).getPowerConsumption(userId, deviceId, fromTime, toTime, options)(this.fetch, this.basePath);
     }
 
@@ -692,13 +692,13 @@ export const InterruptionsApiFetchParamCreator = function (configuration?: Confi
          * 
          * @summary List interruptions
          * @param {number} userId The user whose interruptions we list
-         * @param {String} fromTime List interruptions that start after this point of time, inclusive
-         * @param {String} toTime List interruptions that end before this point of time, exclusive
+         * @param {string} fromTime List interruptions that start after this point of time, inclusive
+         * @param {string} toTime List interruptions that end before this point of time, exclusive
          * @param {number} [deviceId] The device id whose interruptions we list, list all if omitted
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listInterruptions(userId: number, fromTime: String, toTime: String, deviceId?: number, options: any = {}): FetchArgs {
+        listInterruptions(userId: number, fromTime: string, toTime: string, deviceId?: number, options: any = {}): FetchArgs {
             // verify required parameter 'userId' is not null or undefined
             if (userId === null || userId === undefined) {
                 throw new RequiredError('userId','Required parameter userId was null or undefined when calling listInterruptions.');
@@ -894,13 +894,13 @@ export const InterruptionsApiFp = function(configuration?: Configuration) {
          * 
          * @summary List interruptions
          * @param {number} userId The user whose interruptions we list
-         * @param {String} fromTime List interruptions that start after this point of time, inclusive
-         * @param {String} toTime List interruptions that end before this point of time, exclusive
+         * @param {string} fromTime List interruptions that start after this point of time, inclusive
+         * @param {string} toTime List interruptions that end before this point of time, exclusive
          * @param {number} [deviceId] The device id whose interruptions we list, list all if omitted
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listInterruptions(userId: number, fromTime: String, toTime: String, deviceId?: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Interruption>> {
+        listInterruptions(userId: number, fromTime: string, toTime: string, deviceId?: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Interruption>> {
             const fetchArgs = InterruptionsApiFetchParamCreator(configuration).listInterruptions(userId, fromTime, toTime, deviceId, options);
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
@@ -985,13 +985,13 @@ export const InterruptionsApiFactory = function (configuration?: Configuration, 
          * 
          * @summary List interruptions
          * @param {number} userId The user whose interruptions we list
-         * @param {String} fromTime List interruptions that start after this point of time, inclusive
-         * @param {String} toTime List interruptions that end before this point of time, exclusive
+         * @param {string} fromTime List interruptions that start after this point of time, inclusive
+         * @param {string} toTime List interruptions that end before this point of time, exclusive
          * @param {number} [deviceId] The device id whose interruptions we list, list all if omitted
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listInterruptions(userId: number, fromTime: String, toTime: String, deviceId?: number, options?: any) {
+        listInterruptions(userId: number, fromTime: string, toTime: string, deviceId?: number, options?: any) {
             return InterruptionsApiFp(configuration).listInterruptions(userId, fromTime, toTime, deviceId, options)(fetch, basePath);
         },
         /**
@@ -1048,7 +1048,7 @@ export class InterruptionsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof InterruptionsApi
      */
-    public listInterruptions(userId: number, fromTime: String, toTime: String, deviceId?: number, options?: any) {
+    public listInterruptions(userId: number, fromTime: string, toTime: string, deviceId?: number, options?: any) {
         return InterruptionsApiFp(this.configuration).listInterruptions(userId, fromTime, toTime, deviceId, options)(this.fetch, this.basePath);
     }
 
