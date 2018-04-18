@@ -166,6 +166,21 @@
         }
       }
     },
+    "/keycloakUsers/{keycloakId}" : {
+      "get" : {
+        "tags" : [ "Users" ],
+        "summary" : "Get an user by keycloak id",
+        "operationId" : "getUserByKeycloakId",
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "The keycloak id of the user to look up",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        } ]
+      }
+    },
     "/users/{userId}/interruptions" : {
       "get" : {
         "tags" : [ "Interruptions" ],
