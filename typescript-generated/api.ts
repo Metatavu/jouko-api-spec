@@ -1093,3 +1093,117 @@ export class InterruptionsApi extends BaseAPI {
 
 }
 
+/**
+ * UsersApi - fetch parameter creator
+ * @export
+ */
+export const UsersApiFetchParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Get an user by keycloak id
+         * @param {string} userId The keycloak id of the user to look up
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUserByKeycloakId(userId: string, options: any = {}): FetchArgs {
+            // verify required parameter 'userId' is not null or undefined
+            if (userId === null || userId === undefined) {
+                throw new RequiredError('userId','Required parameter userId was null or undefined when calling getUserByKeycloakId.');
+            }
+            const path = `/keycloakUsers/{keycloakId}`
+                .replace(`{${"userId"}}`, String(userId));
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'GET' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            // authentication bearer required
+            if (configuration && configuration.apiKey) {
+                const apiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                headerParameter["Authorization"] = apiKeyValue;
+            }
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * UsersApi - functional programming interface
+ * @export
+ */
+export const UsersApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Get an user by keycloak id
+         * @param {string} userId The keycloak id of the user to look up
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUserByKeycloakId(userId: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
+            const fetchArgs = UsersApiFetchParamCreator(configuration).getUserByKeycloakId(userId, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response;
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+    }
+};
+
+/**
+ * UsersApi - factory interface
+ * @export
+ */
+export const UsersApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
+    return {
+        /**
+         * 
+         * @summary Get an user by keycloak id
+         * @param {string} userId The keycloak id of the user to look up
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUserByKeycloakId(userId: string, options?: any) {
+            return UsersApiFp(configuration).getUserByKeycloakId(userId, options)(fetch, basePath);
+        },
+    };
+};
+
+/**
+ * UsersApi - object-oriented interface
+ * @export
+ * @class UsersApi
+ * @extends {BaseAPI}
+ */
+export class UsersApi extends BaseAPI {
+    /**
+     * 
+     * @summary Get an user by keycloak id
+     * @param {} userId The keycloak id of the user to look up
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public getUserByKeycloakId(userId: string, options?: any) {
+        return UsersApiFp(this.configuration).getUserByKeycloakId(userId, options)(this.fetch, this.basePath);
+    }
+
+}
+
