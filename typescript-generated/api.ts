@@ -223,6 +223,26 @@ export interface Unauthorized {
     message: string;
 }
 
+/**
+ * 
+ * @export
+ * @interface User
+ */
+export interface User {
+    /**
+     * User id
+     * @type {number}
+     * @memberof User
+     */
+    id: number;
+    /**
+     * The keycloak id of the user
+     * @type {string}
+     * @memberof User
+     */
+    name: string;
+}
+
 
 /**
  * DevicesApi - fetch parameter creator
@@ -1111,7 +1131,7 @@ export const UsersApiFetchParamCreator = function (configuration?: Configuration
             if (keycloakId === null || keycloakId === undefined) {
                 throw new RequiredError('keycloakId','Required parameter keycloakId was null or undefined when calling getUserByKeycloakId.');
             }
-            const path = `/users/{keycloakId}`
+            const path = `/keycloakUsers/{keycloakId}`
                 .replace(`{${"keycloakId"}}`, String(keycloakId));
             const urlObj = url.parse(path, true);
             const requestOptions = Object.assign({ method: 'GET' }, options);
