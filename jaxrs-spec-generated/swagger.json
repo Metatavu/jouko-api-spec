@@ -172,13 +172,36 @@
         "summary" : "Get an user by keycloak id",
         "operationId" : "getUserByKeycloakId",
         "parameters" : [ {
-          "name" : "userId",
+          "name" : "keycloakId",
           "in" : "path",
           "description" : "The keycloak id of the user to look up",
           "required" : true,
           "type" : "string",
           "format" : "uuid"
-        } ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/User"
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "schema" : {
+              "$ref" : "#/definitions/Unauthorized"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
       }
     },
     "/users/{userId}/interruptions" : {
@@ -422,6 +445,26 @@
         "message" : {
           "type" : "string",
           "description" : "The error message"
+        }
+      }
+    },
+    "User" : {
+      "type" : "object",
+      "required" : [ "id", "keycloakId", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "User id"
+        },
+        "name" : {
+          "type" : "string",
+          "description" : "The name of the user"
+        },
+        "keycloakId" : {
+          "type" : "string",
+          "format" : "uuid",
+          "description" : "The keycloak id of the user"
         }
       }
     },

@@ -74,7 +74,9 @@ module.exports = function(grunt) {
         command : 'java -jar swagger-codegen-cli.jar generate ' +
           '-i ./swagger.yaml ' +
           '-l typescript-fetch ' +
+          '-t typescript-template/ ' +
           '-o typescript-generated/ ' +
+          '--type-mappings Date=string ' +
           '--additional-properties projectName=jouko-api-ts-client,npmName=jouko-ts-client,npmVersion=' + require('./typescript-generated/package.json').version
       },
       'typescript-bump-version': {

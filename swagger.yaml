@@ -132,6 +132,34 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/InternalServerError'
+  '/keycloakUsers/{keycloakId}':
+    get:
+      operationId: getUserByKeycloakId
+      tags:
+        - Users
+      summary: Get an user by keycloak id
+      parameters:
+        - name: keycloakId
+          in: path
+          description: The keycloak id of the user to look up
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
   '/users/{userId}/interruptions':
     get:
       operationId: listInterruptions
@@ -317,6 +345,24 @@ definitions:
       message:
         description: The error message
         type: string
+  User:
+    type: object
+    required:
+      - id
+      - name
+      - keycloakId
+    properties:
+      id:
+        description: User id
+        type: integer
+        format: int64
+      name:
+        description: The name of the user
+        type: string
+      keycloakId:
+        description: The keycloak id of the user
+        type: string
+        format: uuid
   InterruptionGroup:
     type: object
     required:
