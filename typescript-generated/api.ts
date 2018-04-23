@@ -236,11 +236,17 @@ export interface User {
      */
     id: number;
     /**
-     * The keycloak id of the user
+     * The name of the user
      * @type {string}
      * @memberof User
      */
     name: string;
+    /**
+     * The keycloak id of the user
+     * @type {string}
+     * @memberof User
+     */
+    keycloakId: string;
 }
 
 
@@ -1172,12 +1178,12 @@ export const UsersApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserByKeycloakId(keycloakId: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
+        getUserByKeycloakId(keycloakId: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<User>> {
             const fetchArgs = UsersApiFetchParamCreator(configuration).getUserByKeycloakId(keycloakId, options);
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
-                        return response;
+                        return response.json();
                     } else {
                         throw response;
                     }
