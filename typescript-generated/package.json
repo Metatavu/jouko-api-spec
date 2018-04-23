@@ -1,6 +1,6 @@
 {
   "name": "jouko-ts-client",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "swagger client for jouko-ts-client",
   "author": "Swagger Codegen Contributors",
   "keywords": [

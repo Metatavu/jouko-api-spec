@@ -1102,17 +1102,17 @@ export const UsersApiFetchParamCreator = function (configuration?: Configuration
         /**
          * 
          * @summary Get an user by keycloak id
-         * @param {string} userId The keycloak id of the user to look up
+         * @param {string} keycloakId The keycloak id of the user to look up
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserByKeycloakId(userId: string, options: any = {}): FetchArgs {
-            // verify required parameter 'userId' is not null or undefined
-            if (userId === null || userId === undefined) {
-                throw new RequiredError('userId','Required parameter userId was null or undefined when calling getUserByKeycloakId.');
+        getUserByKeycloakId(keycloakId: string, options: any = {}): FetchArgs {
+            // verify required parameter 'keycloakId' is not null or undefined
+            if (keycloakId === null || keycloakId === undefined) {
+                throw new RequiredError('keycloakId','Required parameter keycloakId was null or undefined when calling getUserByKeycloakId.');
             }
-            const path = `/keycloakUsers/{keycloakId}`
-                .replace(`{${"userId"}}`, String(userId));
+            const path = `/users/{keycloakId}`
+                .replace(`{${"keycloakId"}}`, String(keycloakId));
             const urlObj = url.parse(path, true);
             const requestOptions = Object.assign({ method: 'GET' }, options);
             const headerParameter = {} as any;
@@ -1148,12 +1148,12 @@ export const UsersApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Get an user by keycloak id
-         * @param {string} userId The keycloak id of the user to look up
+         * @param {string} keycloakId The keycloak id of the user to look up
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserByKeycloakId(userId: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
-            const fetchArgs = UsersApiFetchParamCreator(configuration).getUserByKeycloakId(userId, options);
+        getUserByKeycloakId(keycloakId: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
+            const fetchArgs = UsersApiFetchParamCreator(configuration).getUserByKeycloakId(keycloakId, options);
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -1176,12 +1176,12 @@ export const UsersApiFactory = function (configuration?: Configuration, fetch?: 
         /**
          * 
          * @summary Get an user by keycloak id
-         * @param {string} userId The keycloak id of the user to look up
+         * @param {string} keycloakId The keycloak id of the user to look up
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserByKeycloakId(userId: string, options?: any) {
-            return UsersApiFp(configuration).getUserByKeycloakId(userId, options)(fetch, basePath);
+        getUserByKeycloakId(keycloakId: string, options?: any) {
+            return UsersApiFp(configuration).getUserByKeycloakId(keycloakId, options)(fetch, basePath);
         },
     };
 };
@@ -1196,13 +1196,13 @@ export class UsersApi extends BaseAPI {
     /**
      * 
      * @summary Get an user by keycloak id
-     * @param {} userId The keycloak id of the user to look up
+     * @param {} keycloakId The keycloak id of the user to look up
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
      */
-    public getUserByKeycloakId(userId: string, options?: any) {
-        return UsersApiFp(this.configuration).getUserByKeycloakId(userId, options)(this.fetch, this.basePath);
+    public getUserByKeycloakId(keycloakId: string, options?: any) {
+        return UsersApiFp(this.configuration).getUserByKeycloakId(keycloakId, options)(this.fetch, this.basePath);
     }
 
 }
