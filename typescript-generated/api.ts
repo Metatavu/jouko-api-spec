@@ -1178,7 +1178,7 @@ export const UsersApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserByKeycloakId(keycloakId: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<User>> {
+        getUserByKeycloakId(keycloakId: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
             const fetchArgs = UsersApiFetchParamCreator(configuration).getUserByKeycloakId(keycloakId, options);
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
