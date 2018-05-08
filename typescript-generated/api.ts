@@ -207,6 +207,18 @@ export interface InterruptionGroup {
      * @memberof InterruptionGroup
      */
     endTime: string;
+    /**
+     * Overbooking factor
+     * @type {number}
+     * @memberof InterruptionGroup
+     */
+    overbookingFactor?: number;
+    /**
+     * The amount of power this interruption is supposed to save, in watts
+     * @type {number}
+     * @memberof InterruptionGroup
+     */
+    powerSavingGoalInWatts?: number;
 }
 
 /**
