@@ -183,10 +183,7 @@
           "200" : {
             "description" : "Success",
             "schema" : {
-              "type" : "array",
-              "items" : {
-                "$ref" : "#/definitions/User"
-              }
+              "$ref" : "#/definitions/User"
             }
           },
           "401" : {
@@ -486,6 +483,16 @@
           "type" : "string",
           "format" : "date-time",
           "description" : "End time of the interruption, exclusive"
+        },
+        "overbookingFactor" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Overbooking factor"
+        },
+        "powerSavingGoalInWatts" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "The amount of power this interruption is supposed to save, in watts"
         }
       }
     },

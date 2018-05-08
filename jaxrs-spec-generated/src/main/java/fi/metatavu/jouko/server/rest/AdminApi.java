@@ -20,7 +20,7 @@ import java.lang.Exception;
 @Api(description = "the admin API")
 @Consumes({ "application/json;charset=utf-8" })
 @Produces({ "application/json;charset=utf-8" })
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2018-04-23T11:18:47.032Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2018-05-08T11:14:59.951Z")
 
 
 public interface AdminApi  {

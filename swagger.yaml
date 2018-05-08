@@ -380,6 +380,14 @@ definitions:
         description: 'End time of the interruption, exclusive'
         type: string
         format: date-time
+      overbookingFactor:
+        description: 'Overbooking factor'
+        type: number
+        format: double
+      powerSavingGoalInWatts:
+        description: 'The amount of power this interruption is supposed to save, in watts'
+        type: integer
+        format: int64
   Interruption:
     type: object
     required:

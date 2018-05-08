@@ -21,7 +21,7 @@ import java.lang.Exception;
 @Api(description = "the keycloakUsers API")
 @Consumes({ "application/json;charset=utf-8" })
 @Produces({ "application/json;charset=utf-8" })
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2018-04-23T11:18:47.032Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2018-05-08T11:14:59.951Z")
 
 
 public interface KeycloakUsersApi  {
@@ -30,11 +30,11 @@ public interface KeycloakUsersApi  {
     @Path("/{keycloakId}")
     @Consumes({ "application/json;charset&#x3D;utf-8" })
     @Produces({ "application/json;charset&#x3D;utf-8" })
-    @ApiOperation(value = "Get an user by keycloak id", notes = "", response = User.class, responseContainer = "List", authorizations = {
+    @ApiOperation(value = "Get an user by keycloak id", notes = "", response = User.class, authorizations = {
         @Authorization(value = "bearer")
     }, tags={ "Users" })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Success", response = User.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "Success", response = User.class),
         @ApiResponse(code = 401, message = "Unauthorized", response = Unauthorized.class),
         @ApiResponse(code = 500, message = "Internal server error", response = InternalServerError.class) })
     public Response getUserByKeycloakId(@PathParam("keycloakId") @ApiParam("The keycloak id of the user to look up") UUID keycloakId) throws Exception;
