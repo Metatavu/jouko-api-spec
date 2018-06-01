@@ -95,6 +95,18 @@ export interface Device {
      * @memberof Device
      */
     name: string;
+    /**
+     * Device user id
+     * @type {number}
+     * @memberof Device
+     */
+    userId?: number;
+    /**
+     * Device controller id
+     * @type {number}
+     * @memberof Device
+     */
+    controllerId?: number;
 }
 
 /**
@@ -331,6 +343,55 @@ export const DevicesApiFetchParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary List all devices
+         * @param {number} firstResult The offset of the first result
+         * @param {number} maxResults The maximum number of results
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listAllDevices(firstResult: number, maxResults: number, options: any = {}): FetchArgs {
+            // verify required parameter 'firstResult' is not null or undefined
+            if (firstResult === null || firstResult === undefined) {
+                throw new RequiredError('firstResult','Required parameter firstResult was null or undefined when calling listAllDevices.');
+            }
+            // verify required parameter 'maxResults' is not null or undefined
+            if (maxResults === null || maxResults === undefined) {
+                throw new RequiredError('maxResults','Required parameter maxResults was null or undefined when calling listAllDevices.');
+            }
+            const path = `/admin/devices`;
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'GET' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            // authentication bearer required
+            if (configuration && configuration.apiKey) {
+                const apiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                headerParameter["Authorization"] = apiKeyValue;
+            }
+
+            if (firstResult !== undefined) {
+                queryParameter['firstResult'] = firstResult;
+            }
+
+            if (maxResults !== undefined) {
+                queryParameter['maxResults'] = maxResults;
+            }
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
+        /**
+         * 
          * @summary List devices
          * @param {number} userId The user who owns the interruption
          * @param {number} firstResult The offset of the first result
@@ -417,6 +478,26 @@ export const DevicesApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary List all devices
+         * @param {number} firstResult The offset of the first result
+         * @param {number} maxResults The maximum number of results
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listAllDevices(firstResult: number, maxResults: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<Device>> {
+            const fetchArgs = DevicesApiFetchParamCreator(configuration).listAllDevices(firstResult, maxResults, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
          * @summary List devices
          * @param {number} userId The user who owns the interruption
          * @param {number} firstResult The offset of the first result
@@ -460,6 +541,17 @@ export const DevicesApiFactory = function (configuration?: Configuration, fetch?
         },
         /**
          * 
+         * @summary List all devices
+         * @param {number} firstResult The offset of the first result
+         * @param {number} maxResults The maximum number of results
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listAllDevices(firstResult: number, maxResults: number, options?: any) {
+            return DevicesApiFp(configuration).listAllDevices(firstResult, maxResults, options)(fetch, basePath);
+        },
+        /**
+         * 
          * @summary List devices
          * @param {number} userId The user who owns the interruption
          * @param {number} firstResult The offset of the first result
@@ -493,6 +585,19 @@ export class DevicesApi extends BaseAPI {
      */
     public getPowerConsumption(userId: number, deviceId: number, fromTime: string, toTime: string, options?: any) {
         return DevicesApiFp(this.configuration).getPowerConsumption(userId, deviceId, fromTime, toTime, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @summary List all devices
+     * @param {} firstResult The offset of the first result
+     * @param {} maxResults The maximum number of results
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DevicesApi
+     */
+    public listAllDevices(firstResult: number, maxResults: number, options?: any) {
+        return DevicesApiFp(this.configuration).listAllDevices(firstResult, maxResults, options)(this.fetch, this.basePath);
     }
 
     /**
