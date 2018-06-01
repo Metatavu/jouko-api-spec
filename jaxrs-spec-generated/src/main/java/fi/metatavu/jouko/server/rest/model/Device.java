@@ -12,6 +12,8 @@ public class Device   {
   
   private @Valid Long id = null;
   private @Valid String name = null;
+  private @Valid Long userId = null;
+  private @Valid Long controllerId = null;
 
   /**
    * Device id
@@ -49,6 +51,40 @@ public class Device   {
     this.name = name;
   }
 
+  /**
+   * Device user id
+   **/
+  public Device userId(Long userId) {
+    this.userId = userId;
+    return this;
+  }
+
+  
+  @ApiModelProperty(value = "Device user id")
+  public Long getUserId() {
+    return userId;
+  }
+  public void setUserId(Long userId) {
+    this.userId = userId;
+  }
+
+  /**
+   * Device controller id
+   **/
+  public Device controllerId(Long controllerId) {
+    this.controllerId = controllerId;
+    return this;
+  }
+
+  
+  @ApiModelProperty(value = "Device controller id")
+  public Long getControllerId() {
+    return controllerId;
+  }
+  public void setControllerId(Long controllerId) {
+    this.controllerId = controllerId;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -60,12 +96,14 @@ public class Device   {
     }
     Device device = (Device) o;
     return Objects.equals(id, device.id) &&
-        Objects.equals(name, device.name);
+        Objects.equals(name, device.name) &&
+        Objects.equals(userId, device.userId) &&
+        Objects.equals(controllerId, device.controllerId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name);
+    return Objects.hash(id, name, userId, controllerId);
   }
 
   @Override
@@ -75,6 +113,8 @@ public class Device   {
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
+    sb.append("    controllerId: ").append(toIndentedString(controllerId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

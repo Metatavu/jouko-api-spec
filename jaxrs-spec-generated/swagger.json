@@ -166,6 +166,49 @@
         }
       }
     },
+    "/admin/devices" : {
+      "get" : {
+        "tags" : [ "Devices" ],
+        "summary" : "List all devices",
+        "operationId" : "listAllDevices",
+        "parameters" : [ {
+          "name" : "firstResult",
+          "in" : "query",
+          "description" : "The offset of the first result",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "maxResults",
+          "in" : "query",
+          "description" : "The maximum number of results",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Device"
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "schema" : {
+              "$ref" : "#/definitions/Unauthorized"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    },
     "/keycloakUsers/{keycloakId}" : {
       "get" : {
         "tags" : [ "Users" ],
@@ -553,6 +596,16 @@
         "name" : {
           "type" : "string",
           "description" : "The name of the device"
+        },
+        "userId" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Device user id"
+        },
+        "controllerId" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Device controller id"
         }
       }
     },

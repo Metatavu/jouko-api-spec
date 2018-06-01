@@ -132,6 +132,38 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/InternalServerError'
+  '/admin/devices':
+    get:
+      operationId: listAllDevices
+      tags:
+        - Devices
+      summary: List all devices
+      parameters:
+        - name: firstResult
+          in: query
+          description: The offset of the first result
+          required: true
+          type: integer
+        - name: maxResults
+          in: query
+          description: The maximum number of results
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Device'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
   '/keycloakUsers/{keycloakId}':
     get:
       operationId: getUserByKeycloakId
@@ -440,6 +472,14 @@ definitions:
       name:
         description: The name of the device
         type: string
+      userId:
+        description: Device user id
+        type: integer
+        format: int64
+      controllerId:
+        description: Device controller id
+        type: integer
+        format: int64
   DevicePowerConsumption:
     type: object
     required: [averageConsumptionInWatts]

@@ -1,5 +1,6 @@
 package fi.metatavu.jouko.server.rest;
 
+import fi.metatavu.jouko.server.rest.model.Device;
 import fi.metatavu.jouko.server.rest.model.InternalServerError;
 import fi.metatavu.jouko.server.rest.model.InterruptionGroup;
 import fi.metatavu.jouko.server.rest.model.Unauthorized;
@@ -20,7 +21,7 @@ import java.lang.Exception;
 @Api(description = "the admin API")
 @Consumes({ "application/json;charset=utf-8" })
 @Produces({ "application/json;charset=utf-8" })
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2018-05-16T07:18:29.110Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2018-06-01T07:44:53.730Z")
 
 
 public interface AdminApi  {
@@ -37,6 +38,19 @@ public interface AdminApi  {
         @ApiResponse(code = 401, message = "Unauthorized", response = Unauthorized.class),
         @ApiResponse(code = 500, message = "Internal server error", response = InternalServerError.class) })
     public Response createInterruptionGroup(@Valid InterruptionGroup body) throws Exception;
+
+    @GET
+    @Path("/devices")
+    @Consumes({ "application/json;charset&#x3D;utf-8" })
+    @Produces({ "application/json;charset&#x3D;utf-8" })
+    @ApiOperation(value = "List all devices", notes = "", response = Device.class, responseContainer = "List", authorizations = {
+        @Authorization(value = "bearer")
+    }, tags={ "Devices",  })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Success", response = Device.class, responseContainer = "List"),
+        @ApiResponse(code = 401, message = "Unauthorized", response = Unauthorized.class),
+        @ApiResponse(code = 500, message = "Internal server error", response = InternalServerError.class) })
+    public Response listAllDevices(@QueryParam("firstResult") @NotNull   @ApiParam("The offset of the first result")  Integer firstResult,@QueryParam("maxResults") @NotNull   @ApiParam("The maximum number of results")  Integer maxResults) throws Exception;
 
     @GET
     @Path("/interruptiongroups/")
