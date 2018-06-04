@@ -164,6 +164,190 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/InternalServerError'
+    post:
+      operationId: createDevice
+      tags:
+        - Devices
+      summary: Create device
+      parameters:
+        - name: body
+          in: body
+          description: The cancellation status
+          required: true
+          schema:
+            $ref: '#/definitions/Device'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Device'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
+  '/admin/devices/{deviceId}':
+    get:
+      operationId: retrieveDevice
+      tags:
+        - Devices
+      summary: Retreive device
+      parameters:
+        - name: deviceId
+          in: path
+          description: The id of the device
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Device'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
+    put:
+      operationId: updateDevice
+      tags:
+        - Devices
+      summary: Update device
+      parameters:
+        - name: deviceId
+          in: path
+          description: The id of the device
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Device'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
+  '/admin/users':
+    get:
+      operationId: listAllUsers
+      tags:
+        - Users
+      summary: List all users
+      parameters:
+        - name: firstResult
+          in: query
+          description: The offset of the first result
+          required: true
+          type: integer
+        - name: maxResults
+          in: query
+          description: The maximum number of results
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
+    post:
+      operationId: createUser
+      tags:
+        - Users
+      summary: Create user
+      parameters:
+        - name: body
+          in: body
+          description: The cancellation status
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/User'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
+  '/admin/users/{userId}':
+    get:
+      operationId: retrieveUser
+      tags:
+        - Users
+      summary: Retreive user
+      parameters:
+        - name: userId
+          in: path
+          description: The id of the user
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/User'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
+    put:
+      operationId: updateUser
+      tags:
+        - Users
+      summary: Update user
+      parameters:
+        - name: userId
+          in: path
+          description: The id of the user
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/User'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
   '/keycloakUsers/{keycloakId}':
     get:
       operationId: getUserByKeycloakId
