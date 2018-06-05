@@ -282,6 +282,45 @@ export const DevicesApiFetchParamCreator = function (configuration?: Configurati
     return {
         /**
          * 
+         * @summary Create device
+         * @param {Device} body The device to be created
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createDevice(body: Device, options: any = {}): FetchArgs {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling createDevice.');
+            }
+            const path = `/admin/devices`;
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'POST' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            // authentication bearer required
+            if (configuration && configuration.apiKey) {
+                const apiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                headerParameter["Authorization"] = apiKeyValue;
+            }
+
+            headerParameter['Content-Type'] = 'application/json';
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+            requestOptions.body = JSON.stringify(body || {});
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Get the power consumption of the given device in a time period
          * @param {number} userId The user that owns the device
          * @param {number} deviceId The device whose power consumption we measure
@@ -445,6 +484,88 @@ export const DevicesApiFetchParamCreator = function (configuration?: Configurati
                 options: requestOptions,
             };
         },
+        /**
+         * 
+         * @summary Retreive device
+         * @param {number} deviceId The id of the device
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveDevice(deviceId: number, options: any = {}): FetchArgs {
+            // verify required parameter 'deviceId' is not null or undefined
+            if (deviceId === null || deviceId === undefined) {
+                throw new RequiredError('deviceId','Required parameter deviceId was null or undefined when calling retrieveDevice.');
+            }
+            const path = `/admin/devices/{deviceId}`
+                .replace(`{${"deviceId"}}`, String(deviceId));
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'GET' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            // authentication bearer required
+            if (configuration && configuration.apiKey) {
+                const apiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                headerParameter["Authorization"] = apiKeyValue;
+            }
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Update device
+         * @param {number} deviceId The id of the device
+         * @param {Device} newDevice The new data for the device
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateDevice(deviceId: number, newDevice: Device, options: any = {}): FetchArgs {
+            // verify required parameter 'deviceId' is not null or undefined
+            if (deviceId === null || deviceId === undefined) {
+                throw new RequiredError('deviceId','Required parameter deviceId was null or undefined when calling updateDevice.');
+            }
+            // verify required parameter 'newDevice' is not null or undefined
+            if (newDevice === null || newDevice === undefined) {
+                throw new RequiredError('newDevice','Required parameter newDevice was null or undefined when calling updateDevice.');
+            }
+            const path = `/admin/devices/{deviceId}`
+                .replace(`{${"deviceId"}}`, String(deviceId));
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'PUT' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            // authentication bearer required
+            if (configuration && configuration.apiKey) {
+                const apiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                headerParameter["Authorization"] = apiKeyValue;
+            }
+
+            headerParameter['Content-Type'] = 'application/json';
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+            requestOptions.body = JSON.stringify(newDevice || {});
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
     }
 };
 
@@ -454,6 +575,25 @@ export const DevicesApiFetchParamCreator = function (configuration?: Configurati
  */
 export const DevicesApiFp = function(configuration?: Configuration) {
     return {
+        /**
+         * 
+         * @summary Create device
+         * @param {Device} body The device to be created
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createDevice(body: Device, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Device> {
+            const fetchArgs = DevicesApiFetchParamCreator(configuration).createDevice(body, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
         /**
          * 
          * @summary Get the power consumption of the given device in a time period
@@ -517,6 +657,45 @@ export const DevicesApiFp = function(configuration?: Configuration) {
                 });
             };
         },
+        /**
+         * 
+         * @summary Retreive device
+         * @param {number} deviceId The id of the device
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveDevice(deviceId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Device> {
+            const fetchArgs = DevicesApiFetchParamCreator(configuration).retrieveDevice(deviceId, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
+         * @summary Update device
+         * @param {number} deviceId The id of the device
+         * @param {Device} newDevice The new data for the device
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateDevice(deviceId: number, newDevice: Device, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Device> {
+            const fetchArgs = DevicesApiFetchParamCreator(configuration).updateDevice(deviceId, newDevice, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
     }
 };
 
@@ -526,6 +705,16 @@ export const DevicesApiFp = function(configuration?: Configuration) {
  */
 export const DevicesApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
     return {
+        /**
+         * 
+         * @summary Create device
+         * @param {Device} body The device to be created
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createDevice(body: Device, options?: any) {
+            return DevicesApiFp(configuration).createDevice(body, options)(fetch, basePath);
+        },
         /**
          * 
          * @summary Get the power consumption of the given device in a time period
@@ -562,6 +751,27 @@ export const DevicesApiFactory = function (configuration?: Configuration, fetch?
         listDevices(userId: number, firstResult: number, maxResults: number, options?: any) {
             return DevicesApiFp(configuration).listDevices(userId, firstResult, maxResults, options)(fetch, basePath);
         },
+        /**
+         * 
+         * @summary Retreive device
+         * @param {number} deviceId The id of the device
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveDevice(deviceId: number, options?: any) {
+            return DevicesApiFp(configuration).retrieveDevice(deviceId, options)(fetch, basePath);
+        },
+        /**
+         * 
+         * @summary Update device
+         * @param {number} deviceId The id of the device
+         * @param {Device} newDevice The new data for the device
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateDevice(deviceId: number, newDevice: Device, options?: any) {
+            return DevicesApiFp(configuration).updateDevice(deviceId, newDevice, options)(fetch, basePath);
+        },
     };
 };
 
@@ -572,6 +782,18 @@ export const DevicesApiFactory = function (configuration?: Configuration, fetch?
  * @extends {BaseAPI}
  */
 export class DevicesApi extends BaseAPI {
+    /**
+     * 
+     * @summary Create device
+     * @param {} body The device to be created
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DevicesApi
+     */
+    public createDevice(body: Device, options?: any) {
+        return DevicesApiFp(this.configuration).createDevice(body, options)(this.fetch, this.basePath);
+    }
+
     /**
      * 
      * @summary Get the power consumption of the given device in a time period
@@ -612,6 +834,31 @@ export class DevicesApi extends BaseAPI {
      */
     public listDevices(userId: number, firstResult: number, maxResults: number, options?: any) {
         return DevicesApiFp(this.configuration).listDevices(userId, firstResult, maxResults, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @summary Retreive device
+     * @param {} deviceId The id of the device
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DevicesApi
+     */
+    public retrieveDevice(deviceId: number, options?: any) {
+        return DevicesApiFp(this.configuration).retrieveDevice(deviceId, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @summary Update device
+     * @param {} deviceId The id of the device
+     * @param {} newDevice The new data for the device
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DevicesApi
+     */
+    public updateDevice(deviceId: number, newDevice: Device, options?: any) {
+        return DevicesApiFp(this.configuration).updateDevice(deviceId, newDevice, options)(this.fetch, this.basePath);
     }
 
 }
@@ -1244,6 +1491,45 @@ export const UsersApiFetchParamCreator = function (configuration?: Configuration
     return {
         /**
          * 
+         * @summary Create user
+         * @param {User} body The user to be created
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createUser(body: User, options: any = {}): FetchArgs {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling createUser.');
+            }
+            const path = `/admin/users`;
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'POST' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            // authentication bearer required
+            if (configuration && configuration.apiKey) {
+                const apiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                headerParameter["Authorization"] = apiKeyValue;
+            }
+
+            headerParameter['Content-Type'] = 'application/json';
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+            requestOptions.body = JSON.stringify(body || {});
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Get an user by keycloak id
          * @param {string} keycloakId The keycloak id of the user to look up
          * @param {*} [options] Override http request option.
@@ -1279,6 +1565,137 @@ export const UsersApiFetchParamCreator = function (configuration?: Configuration
                 options: requestOptions,
             };
         },
+        /**
+         * 
+         * @summary List all users
+         * @param {number} firstResult The offset of the first result
+         * @param {number} maxResults The maximum number of results
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listAllUsers(firstResult: number, maxResults: number, options: any = {}): FetchArgs {
+            // verify required parameter 'firstResult' is not null or undefined
+            if (firstResult === null || firstResult === undefined) {
+                throw new RequiredError('firstResult','Required parameter firstResult was null or undefined when calling listAllUsers.');
+            }
+            // verify required parameter 'maxResults' is not null or undefined
+            if (maxResults === null || maxResults === undefined) {
+                throw new RequiredError('maxResults','Required parameter maxResults was null or undefined when calling listAllUsers.');
+            }
+            const path = `/admin/users`;
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'GET' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            // authentication bearer required
+            if (configuration && configuration.apiKey) {
+                const apiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                headerParameter["Authorization"] = apiKeyValue;
+            }
+
+            if (firstResult !== undefined) {
+                queryParameter['firstResult'] = firstResult;
+            }
+
+            if (maxResults !== undefined) {
+                queryParameter['maxResults'] = maxResults;
+            }
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Retreive user
+         * @param {number} userId The id of the user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveUser(userId: number, options: any = {}): FetchArgs {
+            // verify required parameter 'userId' is not null or undefined
+            if (userId === null || userId === undefined) {
+                throw new RequiredError('userId','Required parameter userId was null or undefined when calling retrieveUser.');
+            }
+            const path = `/admin/users/{userId}`
+                .replace(`{${"userId"}}`, String(userId));
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'GET' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            // authentication bearer required
+            if (configuration && configuration.apiKey) {
+                const apiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                headerParameter["Authorization"] = apiKeyValue;
+            }
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Update user
+         * @param {number} userId The id of the user
+         * @param {User} body The user to be updated
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateUser(userId: number, body: User, options: any = {}): FetchArgs {
+            // verify required parameter 'userId' is not null or undefined
+            if (userId === null || userId === undefined) {
+                throw new RequiredError('userId','Required parameter userId was null or undefined when calling updateUser.');
+            }
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling updateUser.');
+            }
+            const path = `/admin/users/{userId}`
+                .replace(`{${"userId"}}`, String(userId));
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'PUT' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            // authentication bearer required
+            if (configuration && configuration.apiKey) {
+                const apiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                headerParameter["Authorization"] = apiKeyValue;
+            }
+
+            headerParameter['Content-Type'] = 'application/json';
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+            requestOptions.body = JSON.stringify(body || {});
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
     }
 };
 
@@ -1290,6 +1707,25 @@ export const UsersApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @summary Create user
+         * @param {User} body The user to be created
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createUser(body: User, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
+            const fetchArgs = UsersApiFetchParamCreator(configuration).createUser(body, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
          * @summary Get an user by keycloak id
          * @param {string} keycloakId The keycloak id of the user to look up
          * @param {*} [options] Override http request option.
@@ -1297,6 +1733,65 @@ export const UsersApiFp = function(configuration?: Configuration) {
          */
         getUserByKeycloakId(keycloakId: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
             const fetchArgs = UsersApiFetchParamCreator(configuration).getUserByKeycloakId(keycloakId, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
+         * @summary List all users
+         * @param {number} firstResult The offset of the first result
+         * @param {number} maxResults The maximum number of results
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listAllUsers(firstResult: number, maxResults: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<User>> {
+            const fetchArgs = UsersApiFetchParamCreator(configuration).listAllUsers(firstResult, maxResults, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
+         * @summary Retreive user
+         * @param {number} userId The id of the user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveUser(userId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
+            const fetchArgs = UsersApiFetchParamCreator(configuration).retrieveUser(userId, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
+         * @summary Update user
+         * @param {number} userId The id of the user
+         * @param {User} body The user to be updated
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateUser(userId: number, body: User, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
+            const fetchArgs = UsersApiFetchParamCreator(configuration).updateUser(userId, body, options);
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -1318,6 +1813,16 @@ export const UsersApiFactory = function (configuration?: Configuration, fetch?: 
     return {
         /**
          * 
+         * @summary Create user
+         * @param {User} body The user to be created
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createUser(body: User, options?: any) {
+            return UsersApiFp(configuration).createUser(body, options)(fetch, basePath);
+        },
+        /**
+         * 
          * @summary Get an user by keycloak id
          * @param {string} keycloakId The keycloak id of the user to look up
          * @param {*} [options] Override http request option.
@@ -1325,6 +1830,38 @@ export const UsersApiFactory = function (configuration?: Configuration, fetch?: 
          */
         getUserByKeycloakId(keycloakId: string, options?: any) {
             return UsersApiFp(configuration).getUserByKeycloakId(keycloakId, options)(fetch, basePath);
+        },
+        /**
+         * 
+         * @summary List all users
+         * @param {number} firstResult The offset of the first result
+         * @param {number} maxResults The maximum number of results
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listAllUsers(firstResult: number, maxResults: number, options?: any) {
+            return UsersApiFp(configuration).listAllUsers(firstResult, maxResults, options)(fetch, basePath);
+        },
+        /**
+         * 
+         * @summary Retreive user
+         * @param {number} userId The id of the user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveUser(userId: number, options?: any) {
+            return UsersApiFp(configuration).retrieveUser(userId, options)(fetch, basePath);
+        },
+        /**
+         * 
+         * @summary Update user
+         * @param {number} userId The id of the user
+         * @param {User} body The user to be updated
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateUser(userId: number, body: User, options?: any) {
+            return UsersApiFp(configuration).updateUser(userId, body, options)(fetch, basePath);
         },
     };
 };
@@ -1338,6 +1875,18 @@ export const UsersApiFactory = function (configuration?: Configuration, fetch?: 
 export class UsersApi extends BaseAPI {
     /**
      * 
+     * @summary Create user
+     * @param {} body The user to be created
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public createUser(body: User, options?: any) {
+        return UsersApiFp(this.configuration).createUser(body, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
      * @summary Get an user by keycloak id
      * @param {} keycloakId The keycloak id of the user to look up
      * @param {*} [options] Override http request option.
@@ -1346,6 +1895,44 @@ export class UsersApi extends BaseAPI {
      */
     public getUserByKeycloakId(keycloakId: string, options?: any) {
         return UsersApiFp(this.configuration).getUserByKeycloakId(keycloakId, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @summary List all users
+     * @param {} firstResult The offset of the first result
+     * @param {} maxResults The maximum number of results
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public listAllUsers(firstResult: number, maxResults: number, options?: any) {
+        return UsersApiFp(this.configuration).listAllUsers(firstResult, maxResults, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @summary Retreive user
+     * @param {} userId The id of the user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public retrieveUser(userId: number, options?: any) {
+        return UsersApiFp(this.configuration).retrieveUser(userId, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @summary Update user
+     * @param {} userId The id of the user
+     * @param {} body The user to be updated
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public updateUser(userId: number, body: User, options?: any) {
+        return UsersApiFp(this.configuration).updateUser(userId, body, options)(this.fetch, this.basePath);
     }
 
 }
