@@ -132,6 +132,120 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/InternalServerError'
+  '/admin/controllerDevices':
+    get:
+      operationId: listAllControllerDevices
+      tags:
+        - ControllerDevices
+      summary: List all controller devices
+      parameters:
+        - name: firstResult
+          in: query
+          description: The offset of the first result
+          required: true
+          type: integer
+        - name: maxResults
+          in: query
+          description: The maximum number of results
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ControllerDevice'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
+    post:
+      operationId: createControllerDevice
+      tags:
+        - ControllerDevices
+      summary: Create controller device
+      parameters:
+        - name: body
+          in: body
+          description: The controller device to be created
+          required: true
+          schema:
+            $ref: '#/definitions/ControllerDevice'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ControllerDevice'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
+  '/admin/controllerDevices/{controllerDeviceId}':
+    get:
+      operationId: retrieveControllerDevice
+      tags:
+        - ControllerDevices
+      summary: Retreive controller device
+      parameters:
+        - name: controllerDeviceId
+          in: path
+          description: The id of the controller device
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ControllerDevice'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
+    put:
+      operationId: updateControllerDevice
+      tags:
+        - ControllerDevices
+      summary: Update controller device
+      parameters:
+        - name: controllerDeviceId
+          in: path
+          description: The id of the controller device
+          required: true
+          type: integer
+          format: int64
+        - name: newControllerDevice
+          in: body
+          description: The new data for the controller device
+          required: true
+          schema:
+            $ref: '#/definitions/ControllerDevice'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ControllerDevice'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
   '/admin/devices':
     get:
       operationId: listAllDevices
@@ -676,6 +790,26 @@ definitions:
         description: Device controller id
         type: integer
         format: int64
+  ControllerDevice:
+    type: object
+    required:
+      - id
+      - eui
+      - key
+    properties:
+      id:
+        description: Controller device id
+        type: integer
+        format: int64
+      eui:
+        description: The EUI of the controller device
+        type: string
+      key:
+        description: The key of the controller device
+        type: string
+      communicationChannel:
+        description: The communication channel of the controller device
+        type: string
   DevicePowerConsumption:
     type: object
     required: [averageConsumptionInWatts]
