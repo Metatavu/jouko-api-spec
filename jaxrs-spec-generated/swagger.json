@@ -207,6 +207,269 @@
             }
           }
         }
+      },
+      "post" : {
+        "tags" : [ "Devices" ],
+        "summary" : "Create device",
+        "operationId" : "createDevice",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "The device to be created",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Device"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/Device"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "schema" : {
+              "$ref" : "#/definitions/Unauthorized"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    },
+    "/admin/devices/{deviceId}" : {
+      "get" : {
+        "tags" : [ "Devices" ],
+        "summary" : "Retreive device",
+        "operationId" : "retrieveDevice",
+        "parameters" : [ {
+          "name" : "deviceId",
+          "in" : "path",
+          "description" : "The id of the device",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/Device"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "schema" : {
+              "$ref" : "#/definitions/Unauthorized"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Devices" ],
+        "summary" : "Update device",
+        "operationId" : "updateDevice",
+        "parameters" : [ {
+          "name" : "deviceId",
+          "in" : "path",
+          "description" : "The id of the device",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "newDevice",
+          "description" : "The new data for the device",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Device"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/Device"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "schema" : {
+              "$ref" : "#/definitions/Unauthorized"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    },
+    "/admin/users" : {
+      "get" : {
+        "tags" : [ "Users" ],
+        "summary" : "List all users",
+        "operationId" : "listAllUsers",
+        "parameters" : [ {
+          "name" : "firstResult",
+          "in" : "query",
+          "description" : "The offset of the first result",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "maxResults",
+          "in" : "query",
+          "description" : "The maximum number of results",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/User"
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "schema" : {
+              "$ref" : "#/definitions/Unauthorized"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Users" ],
+        "summary" : "Create user",
+        "operationId" : "createUser",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "The user to be created",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/User"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "schema" : {
+              "$ref" : "#/definitions/Unauthorized"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    },
+    "/admin/users/{userId}" : {
+      "get" : {
+        "tags" : [ "Users" ],
+        "summary" : "Retreive user",
+        "operationId" : "retrieveUser",
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "The id of the user",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "schema" : {
+              "$ref" : "#/definitions/Unauthorized"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Users" ],
+        "summary" : "Update user",
+        "operationId" : "updateUser",
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "The id of the user",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "The user to be updated",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/User"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "schema" : {
+              "$ref" : "#/definitions/Unauthorized"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
       }
     },
     "/keycloakUsers/{keycloakId}" : {
