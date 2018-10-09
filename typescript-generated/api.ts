@@ -80,6 +80,38 @@ export class RequiredError extends Error {
 /**
  * 
  * @export
+ * @interface ControllerDevice
+ */
+export interface ControllerDevice {
+    /**
+     * Controller device id
+     * @type {number}
+     * @memberof ControllerDevice
+     */
+    id: number;
+    /**
+     * The EUI of the controller device
+     * @type {string}
+     * @memberof ControllerDevice
+     */
+    eui: string;
+    /**
+     * The key of the controller device
+     * @type {string}
+     * @memberof ControllerDevice
+     */
+    key: string;
+    /**
+     * The communication channel of the controller device
+     * @type {string}
+     * @memberof ControllerDevice
+     */
+    communicationChannel?: string;
+}
+
+/**
+ * 
+ * @export
  * @interface Device
  */
 export interface Device {
@@ -260,11 +292,29 @@ export interface User {
      */
     id: number;
     /**
-     * The name of the user
+     * The usernamename of the user
      * @type {string}
      * @memberof User
      */
-    name: string;
+    username: string;
+    /**
+     * The firstname of the user
+     * @type {string}
+     * @memberof User
+     */
+    firstname?: string;
+    /**
+     * The lastnamename of the user
+     * @type {string}
+     * @memberof User
+     */
+    lastnamename?: string;
+    /**
+     * The email of the user
+     * @type {string}
+     * @memberof User
+     */
+    email?: string;
     /**
      * The keycloak id of the user
      * @type {string}
@@ -273,6 +323,382 @@ export interface User {
     keycloakId: string;
 }
 
+
+/**
+ * ControllerDevicesApi - fetch parameter creator
+ * @export
+ */
+export const ControllerDevicesApiFetchParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Create controller device
+         * @param {ControllerDevice} body The controller device to be created
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createControllerDevice(body: ControllerDevice, options: any = {}): FetchArgs {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling createControllerDevice.');
+            }
+            const path = `/admin/controllerDevices`;
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'POST' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            // authentication bearer required
+            if (configuration && configuration.apiKey) {
+                const apiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                headerParameter["Authorization"] = apiKeyValue;
+            }
+
+            headerParameter['Content-Type'] = 'application/json';
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+            requestOptions.body = JSON.stringify(body || {});
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary List all controller devices
+         * @param {number} firstResult The offset of the first result
+         * @param {number} maxResults The maximum number of results
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listAllControllerDevices(firstResult: number, maxResults: number, options: any = {}): FetchArgs {
+            // verify required parameter 'firstResult' is not null or undefined
+            if (firstResult === null || firstResult === undefined) {
+                throw new RequiredError('firstResult','Required parameter firstResult was null or undefined when calling listAllControllerDevices.');
+            }
+            // verify required parameter 'maxResults' is not null or undefined
+            if (maxResults === null || maxResults === undefined) {
+                throw new RequiredError('maxResults','Required parameter maxResults was null or undefined when calling listAllControllerDevices.');
+            }
+            const path = `/admin/controllerDevices`;
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'GET' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            // authentication bearer required
+            if (configuration && configuration.apiKey) {
+                const apiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                headerParameter["Authorization"] = apiKeyValue;
+            }
+
+            if (firstResult !== undefined) {
+                queryParameter['firstResult'] = firstResult;
+            }
+
+            if (maxResults !== undefined) {
+                queryParameter['maxResults'] = maxResults;
+            }
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Retreive controller device
+         * @param {number} controllerDeviceId The id of the controller device
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveControllerDevice(controllerDeviceId: number, options: any = {}): FetchArgs {
+            // verify required parameter 'controllerDeviceId' is not null or undefined
+            if (controllerDeviceId === null || controllerDeviceId === undefined) {
+                throw new RequiredError('controllerDeviceId','Required parameter controllerDeviceId was null or undefined when calling retrieveControllerDevice.');
+            }
+            const path = `/admin/controllerDevices/{controllerDeviceId}`
+                .replace(`{${"controllerDeviceId"}}`, String(controllerDeviceId));
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'GET' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            // authentication bearer required
+            if (configuration && configuration.apiKey) {
+                const apiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                headerParameter["Authorization"] = apiKeyValue;
+            }
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Update controller device
+         * @param {number} controllerDeviceId The id of the controller device
+         * @param {ControllerDevice} newControllerDevice The new data for the controller device
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateControllerDevice(controllerDeviceId: number, newControllerDevice: ControllerDevice, options: any = {}): FetchArgs {
+            // verify required parameter 'controllerDeviceId' is not null or undefined
+            if (controllerDeviceId === null || controllerDeviceId === undefined) {
+                throw new RequiredError('controllerDeviceId','Required parameter controllerDeviceId was null or undefined when calling updateControllerDevice.');
+            }
+            // verify required parameter 'newControllerDevice' is not null or undefined
+            if (newControllerDevice === null || newControllerDevice === undefined) {
+                throw new RequiredError('newControllerDevice','Required parameter newControllerDevice was null or undefined when calling updateControllerDevice.');
+            }
+            const path = `/admin/controllerDevices/{controllerDeviceId}`
+                .replace(`{${"controllerDeviceId"}}`, String(controllerDeviceId));
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'PUT' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            // authentication bearer required
+            if (configuration && configuration.apiKey) {
+                const apiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                headerParameter["Authorization"] = apiKeyValue;
+            }
+
+            headerParameter['Content-Type'] = 'application/json';
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+            requestOptions.body = JSON.stringify(newControllerDevice || {});
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * ControllerDevicesApi - functional programming interface
+ * @export
+ */
+export const ControllerDevicesApiFp = function(configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Create controller device
+         * @param {ControllerDevice} body The controller device to be created
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createControllerDevice(body: ControllerDevice, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ControllerDevice> {
+            const fetchArgs = ControllerDevicesApiFetchParamCreator(configuration).createControllerDevice(body, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
+         * @summary List all controller devices
+         * @param {number} firstResult The offset of the first result
+         * @param {number} maxResults The maximum number of results
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listAllControllerDevices(firstResult: number, maxResults: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<ControllerDevice>> {
+            const fetchArgs = ControllerDevicesApiFetchParamCreator(configuration).listAllControllerDevices(firstResult, maxResults, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
+         * @summary Retreive controller device
+         * @param {number} controllerDeviceId The id of the controller device
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveControllerDevice(controllerDeviceId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ControllerDevice> {
+            const fetchArgs = ControllerDevicesApiFetchParamCreator(configuration).retrieveControllerDevice(controllerDeviceId, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
+         * @summary Update controller device
+         * @param {number} controllerDeviceId The id of the controller device
+         * @param {ControllerDevice} newControllerDevice The new data for the controller device
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateControllerDevice(controllerDeviceId: number, newControllerDevice: ControllerDevice, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ControllerDevice> {
+            const fetchArgs = ControllerDevicesApiFetchParamCreator(configuration).updateControllerDevice(controllerDeviceId, newControllerDevice, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+    }
+};
+
+/**
+ * ControllerDevicesApi - factory interface
+ * @export
+ */
+export const ControllerDevicesApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
+    return {
+        /**
+         * 
+         * @summary Create controller device
+         * @param {ControllerDevice} body The controller device to be created
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createControllerDevice(body: ControllerDevice, options?: any) {
+            return ControllerDevicesApiFp(configuration).createControllerDevice(body, options)(fetch, basePath);
+        },
+        /**
+         * 
+         * @summary List all controller devices
+         * @param {number} firstResult The offset of the first result
+         * @param {number} maxResults The maximum number of results
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listAllControllerDevices(firstResult: number, maxResults: number, options?: any) {
+            return ControllerDevicesApiFp(configuration).listAllControllerDevices(firstResult, maxResults, options)(fetch, basePath);
+        },
+        /**
+         * 
+         * @summary Retreive controller device
+         * @param {number} controllerDeviceId The id of the controller device
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveControllerDevice(controllerDeviceId: number, options?: any) {
+            return ControllerDevicesApiFp(configuration).retrieveControllerDevice(controllerDeviceId, options)(fetch, basePath);
+        },
+        /**
+         * 
+         * @summary Update controller device
+         * @param {number} controllerDeviceId The id of the controller device
+         * @param {ControllerDevice} newControllerDevice The new data for the controller device
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateControllerDevice(controllerDeviceId: number, newControllerDevice: ControllerDevice, options?: any) {
+            return ControllerDevicesApiFp(configuration).updateControllerDevice(controllerDeviceId, newControllerDevice, options)(fetch, basePath);
+        },
+    };
+};
+
+/**
+ * ControllerDevicesApi - object-oriented interface
+ * @export
+ * @class ControllerDevicesApi
+ * @extends {BaseAPI}
+ */
+export class ControllerDevicesApi extends BaseAPI {
+    /**
+     * 
+     * @summary Create controller device
+     * @param {} body The controller device to be created
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ControllerDevicesApi
+     */
+    public createControllerDevice(body: ControllerDevice, options?: any) {
+        return ControllerDevicesApiFp(this.configuration).createControllerDevice(body, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @summary List all controller devices
+     * @param {} firstResult The offset of the first result
+     * @param {} maxResults The maximum number of results
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ControllerDevicesApi
+     */
+    public listAllControllerDevices(firstResult: number, maxResults: number, options?: any) {
+        return ControllerDevicesApiFp(this.configuration).listAllControllerDevices(firstResult, maxResults, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @summary Retreive controller device
+     * @param {} controllerDeviceId The id of the controller device
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ControllerDevicesApi
+     */
+    public retrieveControllerDevice(controllerDeviceId: number, options?: any) {
+        return ControllerDevicesApiFp(this.configuration).retrieveControllerDevice(controllerDeviceId, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @summary Update controller device
+     * @param {} controllerDeviceId The id of the controller device
+     * @param {} newControllerDevice The new data for the controller device
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ControllerDevicesApi
+     */
+    public updateControllerDevice(controllerDeviceId: number, newControllerDevice: ControllerDevice, options?: any) {
+        return ControllerDevicesApiFp(this.configuration).updateControllerDevice(controllerDeviceId, newControllerDevice, options)(this.fetch, this.basePath);
+    }
+
+}
 
 /**
  * DevicesApi - fetch parameter creator
