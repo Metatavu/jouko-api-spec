@@ -689,15 +689,24 @@ definitions:
     type: object
     required:
       - id
-      - name
+      - username
       - keycloakId
     properties:
       id:
         description: User id
         type: integer
         format: int64
-      name:
-        description: The name of the user
+      username:
+        description: The usernamename of the user
+        type: string
+      firstname:
+        description: The firstname of the user
+        type: string
+      lastnamename:
+        description: The lastnamename of the user
+        type: string
+      email:
+        description: The email of the user
         type: string
       keycloakId:
         description: The keycloak id of the user
