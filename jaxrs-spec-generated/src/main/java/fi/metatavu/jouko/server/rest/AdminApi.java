@@ -1,5 +1,6 @@
 package fi.metatavu.jouko.server.rest;
 
+import fi.metatavu.jouko.server.rest.model.ControllerDevice;
 import fi.metatavu.jouko.server.rest.model.Device;
 import fi.metatavu.jouko.server.rest.model.InternalServerError;
 import fi.metatavu.jouko.server.rest.model.InterruptionGroup;
@@ -22,10 +23,23 @@ import java.lang.Exception;
 @Api(description = "the admin API")
 @Consumes({ "application/json;charset=utf-8" })
 @Produces({ "application/json;charset=utf-8" })
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2018-06-05T07:54:42.840Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2018-10-09T09:28:01.997+03:00")
 
 
 public interface AdminApi  {
+
+    @POST
+    @Path("/controllerDevices")
+    @Consumes({ "application/json;charset&#x3D;utf-8" })
+    @Produces({ "application/json;charset&#x3D;utf-8" })
+    @ApiOperation(value = "Create controller device", notes = "", response = ControllerDevice.class, authorizations = {
+        @Authorization(value = "bearer")
+    }, tags={ "ControllerDevices",  })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Success", response = ControllerDevice.class),
+        @ApiResponse(code = 401, message = "Unauthorized", response = Unauthorized.class),
+        @ApiResponse(code = 500, message = "Internal server error", response = InternalServerError.class) })
+    public Response createControllerDevice(@Valid ControllerDevice body) throws Exception;
 
     @POST
     @Path("/devices")
@@ -67,6 +81,19 @@ public interface AdminApi  {
     public Response createUser(@Valid User body) throws Exception;
 
     @GET
+    @Path("/controllerDevices")
+    @Consumes({ "application/json;charset&#x3D;utf-8" })
+    @Produces({ "application/json;charset&#x3D;utf-8" })
+    @ApiOperation(value = "List all controller devices", notes = "", response = ControllerDevice.class, responseContainer = "List", authorizations = {
+        @Authorization(value = "bearer")
+    }, tags={ "ControllerDevices",  })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Success", response = ControllerDevice.class, responseContainer = "List"),
+        @ApiResponse(code = 401, message = "Unauthorized", response = Unauthorized.class),
+        @ApiResponse(code = 500, message = "Internal server error", response = InternalServerError.class) })
+    public Response listAllControllerDevices(@QueryParam("firstResult") @NotNull   @ApiParam("The offset of the first result")  Integer firstResult,@QueryParam("maxResults") @NotNull   @ApiParam("The maximum number of results")  Integer maxResults) throws Exception;
+
+    @GET
     @Path("/devices")
     @Consumes({ "application/json;charset&#x3D;utf-8" })
     @Produces({ "application/json;charset&#x3D;utf-8" })
@@ -106,6 +133,19 @@ public interface AdminApi  {
     public Response listInterruptionGroups(@QueryParam("firstResult") @NotNull   @ApiParam("The offset of the first result")  Integer firstResult,@QueryParam("maxResults") @NotNull   @ApiParam("The maximum number of results")  Integer maxResults) throws Exception;
 
     @GET
+    @Path("/controllerDevices/{controllerDeviceId}")
+    @Consumes({ "application/json;charset&#x3D;utf-8" })
+    @Produces({ "application/json;charset&#x3D;utf-8" })
+    @ApiOperation(value = "Retreive controller device", notes = "", response = ControllerDevice.class, authorizations = {
+        @Authorization(value = "bearer")
+    }, tags={ "ControllerDevices",  })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Success", response = ControllerDevice.class),
+        @ApiResponse(code = 401, message = "Unauthorized", response = Unauthorized.class),
+        @ApiResponse(code = 500, message = "Internal server error", response = InternalServerError.class) })
+    public Response retrieveControllerDevice(@PathParam("controllerDeviceId") @ApiParam("The id of the controller device") Long controllerDeviceId) throws Exception;
+
+    @GET
     @Path("/devices/{deviceId}")
     @Consumes({ "application/json;charset&#x3D;utf-8" })
     @Produces({ "application/json;charset&#x3D;utf-8" })
@@ -143,6 +183,19 @@ public interface AdminApi  {
         @ApiResponse(code = 401, message = "Unauthorized", response = Unauthorized.class),
         @ApiResponse(code = 500, message = "Internal server error", response = InternalServerError.class) })
     public Response retrieveUser(@PathParam("userId") @ApiParam("The id of the user") Long userId) throws Exception;
+
+    @PUT
+    @Path("/controllerDevices/{controllerDeviceId}")
+    @Consumes({ "application/json;charset&#x3D;utf-8" })
+    @Produces({ "application/json;charset&#x3D;utf-8" })
+    @ApiOperation(value = "Update controller device", notes = "", response = ControllerDevice.class, authorizations = {
+        @Authorization(value = "bearer")
+    }, tags={ "ControllerDevices",  })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Success", response = ControllerDevice.class),
+        @ApiResponse(code = 401, message = "Unauthorized", response = Unauthorized.class),
+        @ApiResponse(code = 500, message = "Internal server error", response = InternalServerError.class) })
+    public Response updateControllerDevice(@PathParam("controllerDeviceId") @ApiParam("The id of the controller device") Long controllerDeviceId,@Valid ControllerDevice newControllerDevice) throws Exception;
 
     @PUT
     @Path("/devices/{deviceId}")
