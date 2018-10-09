@@ -906,28 +906,12 @@
     },
     "User" : {
       "type" : "object",
-      "required" : [ "id", "keycloakId", "username" ],
+      "required" : [ "id", "keycloakId" ],
       "properties" : {
         "id" : {
           "type" : "integer",
           "format" : "int64",
           "description" : "User id"
-        },
-        "username" : {
-          "type" : "string",
-          "description" : "The usernamename of the user"
-        },
-        "firstname" : {
-          "type" : "string",
-          "description" : "The firstname of the user"
-        },
-        "lastnamename" : {
-          "type" : "string",
-          "description" : "The lastnamename of the user"
-        },
-        "email" : {
-          "type" : "string",
-          "description" : "The email of the user"
         },
         "keycloakId" : {
           "type" : "string",
