@@ -292,30 +292,6 @@ export interface User {
      */
     id: number;
     /**
-     * The usernamename of the user
-     * @type {string}
-     * @memberof User
-     */
-    username: string;
-    /**
-     * The firstname of the user
-     * @type {string}
-     * @memberof User
-     */
-    firstname?: string;
-    /**
-     * The lastnamename of the user
-     * @type {string}
-     * @memberof User
-     */
-    lastnamename?: string;
-    /**
-     * The email of the user
-     * @type {string}
-     * @memberof User
-     */
-    email?: string;
-    /**
      * The keycloak id of the user
      * @type {string}
      * @memberof User
