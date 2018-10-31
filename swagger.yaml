@@ -551,6 +551,8 @@ paths:
       operationId: deleteInterruption
       summary: Delete interruption
       description: Deletes an interruption
+      tags:
+        - Interruptions
       parameters:
         - name: interruptionId
           in: path

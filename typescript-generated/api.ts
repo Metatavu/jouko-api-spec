@@ -677,129 +677,6 @@ export class ControllerDevicesApi extends BaseAPI {
 }
 
 /**
- * DefaultApi - fetch parameter creator
- * @export
- */
-export const DefaultApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * Deletes an interruption
-         * @summary Delete interruption
-         * @param {number} interruptionId The id of the interruption being deleted
-         * @param {number} userId The id of the interruption being deleted
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteInterruption(interruptionId: number, userId: number, options: any = {}): FetchArgs {
-            // verify required parameter 'interruptionId' is not null or undefined
-            if (interruptionId === null || interruptionId === undefined) {
-                throw new RequiredError('interruptionId','Required parameter interruptionId was null or undefined when calling deleteInterruption.');
-            }
-            // verify required parameter 'userId' is not null or undefined
-            if (userId === null || userId === undefined) {
-                throw new RequiredError('userId','Required parameter userId was null or undefined when calling deleteInterruption.');
-            }
-            const path = `/users/{userId}/interruptions/{interruptionId}`
-                .replace(`{${"interruptionId"}}`, String(interruptionId))
-                .replace(`{${"userId"}}`, String(userId));
-            const urlObj = url.parse(path, true);
-            const requestOptions = Object.assign({ method: 'DELETE' }, options);
-            const headerParameter = {} as any;
-            const queryParameter = {} as any;
-
-            // authentication bearer required
-            if (configuration && configuration.apiKey) {
-                const apiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                headerParameter["Authorization"] = apiKeyValue;
-            }
-
-            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete urlObj.search;
-            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
-
-            return {
-                url: url.format(urlObj),
-                options: requestOptions,
-            };
-        },
-    }
-};
-
-/**
- * DefaultApi - functional programming interface
- * @export
- */
-export const DefaultApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * Deletes an interruption
-         * @summary Delete interruption
-         * @param {number} interruptionId The id of the interruption being deleted
-         * @param {number} userId The id of the interruption being deleted
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteInterruption(interruptionId: number, userId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
-            const fetchArgs = DefaultApiFetchParamCreator(configuration).deleteInterruption(interruptionId, userId, options);
-            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
-};
-
-/**
- * DefaultApi - factory interface
- * @export
- */
-export const DefaultApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * Deletes an interruption
-         * @summary Delete interruption
-         * @param {number} interruptionId The id of the interruption being deleted
-         * @param {number} userId The id of the interruption being deleted
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteInterruption(interruptionId: number, userId: number, options?: any) {
-            return DefaultApiFp(configuration).deleteInterruption(interruptionId, userId, options)(fetch, basePath);
-        },
-    };
-};
-
-/**
- * DefaultApi - object-oriented interface
- * @export
- * @class DefaultApi
- * @extends {BaseAPI}
- */
-export class DefaultApi extends BaseAPI {
-    /**
-     * Deletes an interruption
-     * @summary Delete interruption
-     * @param {} interruptionId The id of the interruption being deleted
-     * @param {} userId The id of the interruption being deleted
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DefaultApi
-     */
-    public deleteInterruption(interruptionId: number, userId: number, options?: any) {
-        return DefaultApiFp(this.configuration).deleteInterruption(interruptionId, userId, options)(this.fetch, this.basePath);
-    }
-
-}
-
-/**
  * DevicesApi - fetch parameter creator
  * @export
  */
@@ -1604,6 +1481,49 @@ export class InterruptionGroupsApi extends BaseAPI {
 export const InterruptionsApiFetchParamCreator = function (configuration?: Configuration) {
     return {
         /**
+         * Deletes an interruption
+         * @summary Delete interruption
+         * @param {number} interruptionId The id of the interruption being deleted
+         * @param {number} userId The id of the interruption being deleted
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteInterruption(interruptionId: number, userId: number, options: any = {}): FetchArgs {
+            // verify required parameter 'interruptionId' is not null or undefined
+            if (interruptionId === null || interruptionId === undefined) {
+                throw new RequiredError('interruptionId','Required parameter interruptionId was null or undefined when calling deleteInterruption.');
+            }
+            // verify required parameter 'userId' is not null or undefined
+            if (userId === null || userId === undefined) {
+                throw new RequiredError('userId','Required parameter userId was null or undefined when calling deleteInterruption.');
+            }
+            const path = `/users/{userId}/interruptions/{interruptionId}`
+                .replace(`{${"interruptionId"}}`, String(interruptionId))
+                .replace(`{${"userId"}}`, String(userId));
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'DELETE' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            // authentication bearer required
+            if (configuration && configuration.apiKey) {
+                const apiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                headerParameter["Authorization"] = apiKeyValue;
+            }
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
+        /**
          * 
          * @summary List interruptions
          * @param {number} userId The user whose interruptions we list
@@ -1806,6 +1726,26 @@ export const InterruptionsApiFetchParamCreator = function (configuration?: Confi
 export const InterruptionsApiFp = function(configuration?: Configuration) {
     return {
         /**
+         * Deletes an interruption
+         * @summary Delete interruption
+         * @param {number} interruptionId The id of the interruption being deleted
+         * @param {number} userId The id of the interruption being deleted
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteInterruption(interruptionId: number, userId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
+            const fetchArgs = InterruptionsApiFetchParamCreator(configuration).deleteInterruption(interruptionId, userId, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response;
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
          * 
          * @summary List interruptions
          * @param {number} userId The user whose interruptions we list
@@ -1897,6 +1837,17 @@ export const InterruptionsApiFp = function(configuration?: Configuration) {
 export const InterruptionsApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
     return {
         /**
+         * Deletes an interruption
+         * @summary Delete interruption
+         * @param {number} interruptionId The id of the interruption being deleted
+         * @param {number} userId The id of the interruption being deleted
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteInterruption(interruptionId: number, userId: number, options?: any) {
+            return InterruptionsApiFp(configuration).deleteInterruption(interruptionId, userId, options)(fetch, basePath);
+        },
+        /**
          * 
          * @summary List interruptions
          * @param {number} userId The user whose interruptions we list
@@ -1952,6 +1903,19 @@ export const InterruptionsApiFactory = function (configuration?: Configuration, 
  * @extends {BaseAPI}
  */
 export class InterruptionsApi extends BaseAPI {
+    /**
+     * Deletes an interruption
+     * @summary Delete interruption
+     * @param {} interruptionId The id of the interruption being deleted
+     * @param {} userId The id of the interruption being deleted
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof InterruptionsApi
+     */
+    public deleteInterruption(interruptionId: number, userId: number, options?: any) {
+        return InterruptionsApiFp(this.configuration).deleteInterruption(interruptionId, userId, options)(this.fetch, this.basePath);
+    }
+
     /**
      * 
      * @summary List interruptions
