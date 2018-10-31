@@ -1483,23 +1483,17 @@ export const InterruptionsApiFetchParamCreator = function (configuration?: Confi
         /**
          * Deletes an interruption
          * @summary Delete interruption
-         * @param {number} interruptionId The id of the interruption being deleted
-         * @param {number} userId The id of the interruption being deleted
+         * @param {number} groupId The id of the interruption being deleted
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteInterruption(interruptionId: number, userId: number, options: any = {}): FetchArgs {
-            // verify required parameter 'interruptionId' is not null or undefined
-            if (interruptionId === null || interruptionId === undefined) {
-                throw new RequiredError('interruptionId','Required parameter interruptionId was null or undefined when calling deleteInterruption.');
+        deleteInterruption(groupId: number, options: any = {}): FetchArgs {
+            // verify required parameter 'groupId' is not null or undefined
+            if (groupId === null || groupId === undefined) {
+                throw new RequiredError('groupId','Required parameter groupId was null or undefined when calling deleteInterruption.');
             }
-            // verify required parameter 'userId' is not null or undefined
-            if (userId === null || userId === undefined) {
-                throw new RequiredError('userId','Required parameter userId was null or undefined when calling deleteInterruption.');
-            }
-            const path = `/users/{userId}/interruptions/{interruptionId}`
-                .replace(`{${"interruptionId"}}`, String(interruptionId))
-                .replace(`{${"userId"}}`, String(userId));
+            const path = `/admin/interruptiongroups/{groupId}`
+                .replace(`{${"groupId"}}`, String(groupId));
             const urlObj = url.parse(path, true);
             const requestOptions = Object.assign({ method: 'DELETE' }, options);
             const headerParameter = {} as any;
@@ -1728,13 +1722,12 @@ export const InterruptionsApiFp = function(configuration?: Configuration) {
         /**
          * Deletes an interruption
          * @summary Delete interruption
-         * @param {number} interruptionId The id of the interruption being deleted
-         * @param {number} userId The id of the interruption being deleted
+         * @param {number} groupId The id of the interruption being deleted
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteInterruption(interruptionId: number, userId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
-            const fetchArgs = InterruptionsApiFetchParamCreator(configuration).deleteInterruption(interruptionId, userId, options);
+        deleteInterruption(groupId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
+            const fetchArgs = InterruptionsApiFetchParamCreator(configuration).deleteInterruption(groupId, options);
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -1839,13 +1832,12 @@ export const InterruptionsApiFactory = function (configuration?: Configuration, 
         /**
          * Deletes an interruption
          * @summary Delete interruption
-         * @param {number} interruptionId The id of the interruption being deleted
-         * @param {number} userId The id of the interruption being deleted
+         * @param {number} groupId The id of the interruption being deleted
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteInterruption(interruptionId: number, userId: number, options?: any) {
-            return InterruptionsApiFp(configuration).deleteInterruption(interruptionId, userId, options)(fetch, basePath);
+        deleteInterruption(groupId: number, options?: any) {
+            return InterruptionsApiFp(configuration).deleteInterruption(groupId, options)(fetch, basePath);
         },
         /**
          * 
@@ -1906,14 +1898,13 @@ export class InterruptionsApi extends BaseAPI {
     /**
      * Deletes an interruption
      * @summary Delete interruption
-     * @param {} interruptionId The id of the interruption being deleted
-     * @param {} userId The id of the interruption being deleted
+     * @param {} groupId The id of the interruption being deleted
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof InterruptionsApi
      */
-    public deleteInterruption(interruptionId: number, userId: number, options?: any) {
-        return InterruptionsApiFp(this.configuration).deleteInterruption(interruptionId, userId, options)(this.fetch, this.basePath);
+    public deleteInterruption(groupId: number, options?: any) {
+        return InterruptionsApiFp(this.configuration).deleteInterruption(groupId, options)(this.fetch, this.basePath);
     }
 
     /**
