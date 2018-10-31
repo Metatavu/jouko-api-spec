@@ -546,6 +546,33 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/InternalServerError'
+  '/users/{userId}/interruptions/{interruptionId}':
+    delete:
+      operationId: deleteInterruption
+      summary: Delete interruption
+      description: Deletes an interruption
+      parameters:
+        - name: interruptionId
+          in: path
+          description: The id of the interruption being deleted
+          required: true
+          type: integer
+        - name: userId
+          in: path
+          description: The id of the interruption being deleted
+          required: true
+          type: integer
+      responses:
+        '204':
+          description: Success
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
   '/users/{userId}/interruptions/{interruptionId}/cancelled':
     put:
       operationId: setInterruptionCancelled
@@ -689,25 +716,12 @@ definitions:
     type: object
     required:
       - id
-      - username
       - keycloakId
     properties:
       id:
         description: User id
         type: integer
         format: int64
-      username:
-        description: The usernamename of the user
-        type: string
-      firstname:
-        description: The firstname of the user
-        type: string
-      lastnamename:
-        description: The lastnamename of the user
-        type: string
-      email:
-        description: The email of the user
-        type: string
       keycloakId:
         description: The keycloak id of the user
         type: string
