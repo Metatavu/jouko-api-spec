@@ -6,6 +6,7 @@ import fi.metatavu.jouko.server.rest.model.InternalServerError;
 import fi.metatavu.jouko.server.rest.model.Interruption;
 import fi.metatavu.jouko.server.rest.model.InterruptionCancellation;
 import java.time.OffsetDateTime;
+import fi.metatavu.jouko.server.rest.model.PowerMeasurement;
 import fi.metatavu.jouko.server.rest.model.Unauthorized;
 
 import javax.ws.rs.*;
@@ -24,7 +25,7 @@ import java.lang.Exception;
 @Api(description = "the users API")
 @Consumes({ "application/json;charset=utf-8" })
 @Produces({ "application/json;charset=utf-8" })
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2018-10-09T09:48:50.811+03:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2018-10-31T15:37:27.118+02:00")
 
 
 public interface UsersApi  {
@@ -41,6 +42,19 @@ public interface UsersApi  {
         @ApiResponse(code = 401, message = "Unauthorized", response = Unauthorized.class),
         @ApiResponse(code = 500, message = "Internal server error", response = InternalServerError.class) })
     public Response getPowerConsumption(@PathParam("userId") @ApiParam("The user that owns the device") Long userId,@PathParam("deviceId") @ApiParam("The device whose power consumption we measure") Long deviceId,@QueryParam("fromTime") @NotNull   @ApiParam("The start of the time period that we measure the consumption in, inclusive")  OffsetDateTime fromTime,@QueryParam("toTime") @NotNull   @ApiParam("The end of the time period that we measure the consumption in, exclusive")  OffsetDateTime toTime) throws Exception;
+
+    @GET
+    @Path("/{userId}/powerMeasurements")
+    @Consumes({ "application/json;charset&#x3D;utf-8" })
+    @Produces({ "application/json;charset&#x3D;utf-8" })
+    @ApiOperation(value = "List all measurements", notes = "", response = PowerMeasurement.class, responseContainer = "List", authorizations = {
+        @Authorization(value = "bearer")
+    }, tags={ "Measurements",  })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Success", response = PowerMeasurement.class, responseContainer = "List"),
+        @ApiResponse(code = 401, message = "Unauthorized", response = Unauthorized.class),
+        @ApiResponse(code = 500, message = "Internal server error", response = InternalServerError.class) })
+    public Response listAllMeasurements(@PathParam("userId") @ApiParam("The id of the user") Integer userId) throws Exception;
 
     @GET
     @Path("/{userId}/devices")

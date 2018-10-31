@@ -23,7 +23,7 @@ import java.lang.Exception;
 @Api(description = "the admin API")
 @Consumes({ "application/json;charset=utf-8" })
 @Produces({ "application/json;charset=utf-8" })
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2018-10-09T09:48:50.811+03:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2018-10-31T15:37:27.118+02:00")
 
 
 public interface AdminApi  {
@@ -79,6 +79,19 @@ public interface AdminApi  {
         @ApiResponse(code = 401, message = "Unauthorized", response = Unauthorized.class),
         @ApiResponse(code = 500, message = "Internal server error", response = InternalServerError.class) })
     public Response createUser(@Valid User body) throws Exception;
+
+    @DELETE
+    @Path("/interruptiongroups/{groupId}")
+    @Consumes({ "application/json;charset&#x3D;utf-8" })
+    @Produces({ "application/json;charset&#x3D;utf-8" })
+    @ApiOperation(value = "Delete interruption", notes = "Deletes an interruption", response = Void.class, authorizations = {
+        @Authorization(value = "bearer")
+    }, tags={ "Interruptions",  })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 204, message = "Success", response = Void.class),
+        @ApiResponse(code = 401, message = "Unauthorized", response = Unauthorized.class),
+        @ApiResponse(code = 500, message = "Internal server error", response = InternalServerError.class) })
+    public Response deleteInterruption(@PathParam("groupId") @ApiParam("The id of the interruption being deleted") Long groupId) throws Exception;
 
     @GET
     @Path("/controllerDevices")
