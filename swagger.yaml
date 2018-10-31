@@ -132,6 +132,30 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/InternalServerError'
+    delete:
+      operationId: deleteInterruption
+      summary: Delete interruption
+      description: Deletes an interruption
+      tags:
+        - Interruptions
+      parameters:
+        - name: groupId
+          in: path
+          description: The id of the interruption being deleted
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Success
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
   '/admin/controllerDevices':
     get:
       operationId: listAllControllerDevices
@@ -246,6 +270,35 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/InternalServerError'
+  '/users/{userId}/powerMeasurements':
+    get:
+      operationId: listAllMeasurements
+      tags:
+        - Measurements
+      summary: List all measurements
+      parameters:
+        - name: userId
+          in: path
+          description: The id of the user
+          required: true
+          type: integer
+          format: int6
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PowerMeasurement'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/InternalServerError'
+      
   '/admin/devices':
     get:
       operationId: listAllDevices
@@ -546,35 +599,6 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/InternalServerError'
-  '/users/{userId}/interruptions/{interruptionId}':
-    delete:
-      operationId: deleteInterruption
-      summary: Delete interruption
-      description: Deletes an interruption
-      tags:
-        - Interruptions
-      parameters:
-        - name: interruptionId
-          in: path
-          description: The id of the interruption being deleted
-          required: true
-          type: integer
-        - name: userId
-          in: path
-          description: The id of the interruption being deleted
-          required: true
-          type: integer
-      responses:
-        '204':
-          description: Success
-        '401':
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/Unauthorized'
-        '500':
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/InternalServerError'
   '/users/{userId}/interruptions/{interruptionId}/cancelled':
     put:
       operationId: setInterruptionCancelled
@@ -794,6 +818,38 @@ definitions:
       cancelled:
         description: True if the interruption has been cancelled
         type: boolean
+  PowerMeasurement:
+    type: object
+    properties:
+      id:
+        description: Measurement id
+        type: integer
+        format: int64
+      startTime:
+        description: 'Start time of the measurement'
+        type: string
+        format: date-time
+      endTime:
+        description: 'End time of the measurement'
+        type: string
+        format: date-time
+      measurementType:
+        description: 'Type of measurement'
+        type: string
+        enum:
+          - AVERAGE
+      measurementValue:
+        type: number
+        format: double
+      device_id:
+        description: Device id
+        type: integer
+        format: int64
+      phaseNumber:
+        description: Phasenumber
+        type: integer
+        format: int64
+        
   Device:
     type: object
     required:
