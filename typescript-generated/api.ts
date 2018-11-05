@@ -268,6 +268,70 @@ export interface InterruptionGroup {
 /**
  * 
  * @export
+ * @interface PowerMeasurement
+ */
+export interface PowerMeasurement {
+    /**
+     * Measurement id
+     * @type {number}
+     * @memberof PowerMeasurement
+     */
+    id?: number;
+    /**
+     * Start time of the measurement
+     * @type {string}
+     * @memberof PowerMeasurement
+     */
+    startTime?: string;
+    /**
+     * End time of the measurement
+     * @type {string}
+     * @memberof PowerMeasurement
+     */
+    endTime?: string;
+    /**
+     * Type of measurement
+     * @type {string}
+     * @memberof PowerMeasurement
+     */
+    measurementType?: PowerMeasurement.MeasurementTypeEnum;
+    /**
+     * 
+     * @type {number}
+     * @memberof PowerMeasurement
+     */
+    measurementValue?: number;
+    /**
+     * Device id
+     * @type {number}
+     * @memberof PowerMeasurement
+     */
+    deviceId?: number;
+    /**
+     * Phasenumber
+     * @type {number}
+     * @memberof PowerMeasurement
+     */
+    phaseNumber?: number;
+}
+
+/**
+ * @export
+ * @namespace PowerMeasurement
+ */
+export namespace PowerMeasurement {
+    /**
+     * @export
+     * @enum {string}
+     */
+    export enum MeasurementTypeEnum {
+        AVERAGE = <any> 'AVERAGE'
+    }
+}
+
+/**
+ * 
+ * @export
  * @interface Unauthorized
  */
 export interface Unauthorized {
@@ -833,6 +897,43 @@ export const DevicesApiFetchParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary List all measurements
+         * @param {number} userId The id of the user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listAllMeasurements(userId: number, options: any = {}): FetchArgs {
+            // verify required parameter 'userId' is not null or undefined
+            if (userId === null || userId === undefined) {
+                throw new RequiredError('userId','Required parameter userId was null or undefined when calling listAllMeasurements.');
+            }
+            const path = `/users/{userId}/powerMeasurements`
+                .replace(`{${"userId"}}`, String(userId));
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'GET' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            // authentication bearer required
+            if (configuration && configuration.apiKey) {
+                const apiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                headerParameter["Authorization"] = apiKeyValue;
+            }
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
+        /**
+         * 
          * @summary List devices
          * @param {number} userId The user who owns the interruption
          * @param {number} firstResult The offset of the first result
@@ -1040,6 +1141,25 @@ export const DevicesApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary List all measurements
+         * @param {number} userId The id of the user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listAllMeasurements(userId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<PowerMeasurement>> {
+            const fetchArgs = DevicesApiFetchParamCreator(configuration).listAllMeasurements(userId, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
          * @summary List devices
          * @param {number} userId The user who owns the interruption
          * @param {number} firstResult The offset of the first result
@@ -1143,6 +1263,16 @@ export const DevicesApiFactory = function (configuration?: Configuration, fetch?
         },
         /**
          * 
+         * @summary List all measurements
+         * @param {number} userId The id of the user
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listAllMeasurements(userId: number, options?: any) {
+            return DevicesApiFp(configuration).listAllMeasurements(userId, options)(fetch, basePath);
+        },
+        /**
+         * 
          * @summary List devices
          * @param {number} userId The user who owns the interruption
          * @param {number} firstResult The offset of the first result
@@ -1222,6 +1352,18 @@ export class DevicesApi extends BaseAPI {
      */
     public listAllDevices(firstResult: number, maxResults: number, options?: any) {
         return DevicesApiFp(this.configuration).listAllDevices(firstResult, maxResults, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @summary List all measurements
+     * @param {} userId The id of the user
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DevicesApi
+     */
+    public listAllMeasurements(userId: number, options?: any) {
+        return DevicesApiFp(this.configuration).listAllMeasurements(userId, options)(this.fetch, this.basePath);
     }
 
     /**
@@ -1311,6 +1453,43 @@ export const InterruptionGroupsApiFetchParamCreator = function (configuration?: 
             };
         },
         /**
+         * Deletes an interruption
+         * @summary Delete interruption
+         * @param {number} groupId The id of the interruption being deleted
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteInterruption(groupId: number, options: any = {}): FetchArgs {
+            // verify required parameter 'groupId' is not null or undefined
+            if (groupId === null || groupId === undefined) {
+                throw new RequiredError('groupId','Required parameter groupId was null or undefined when calling deleteInterruption.');
+            }
+            const path = `/admin/interruptiongroups/{groupId}`
+                .replace(`{${"groupId"}}`, String(groupId));
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'DELETE' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            // authentication bearer required
+            if (configuration && configuration.apiKey) {
+                const apiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                headerParameter["Authorization"] = apiKeyValue;
+            }
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
+        /**
          * 
          * @summary List interruption groups
          * @param {number} firstResult The offset of the first result
@@ -1388,6 +1567,25 @@ export const InterruptionGroupsApiFp = function(configuration?: Configuration) {
             };
         },
         /**
+         * Deletes an interruption
+         * @summary Delete interruption
+         * @param {number} groupId The id of the interruption being deleted
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteInterruption(groupId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
+            const fetchArgs = InterruptionGroupsApiFetchParamCreator(configuration).deleteInterruption(groupId, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response;
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
          * 
          * @summary List interruption groups
          * @param {number} firstResult The offset of the first result
@@ -1427,6 +1625,16 @@ export const InterruptionGroupsApiFactory = function (configuration?: Configurat
             return InterruptionGroupsApiFp(configuration).createInterruptionGroup(body, options)(fetch, basePath);
         },
         /**
+         * Deletes an interruption
+         * @summary Delete interruption
+         * @param {number} groupId The id of the interruption being deleted
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteInterruption(groupId: number, options?: any) {
+            return InterruptionGroupsApiFp(configuration).deleteInterruption(groupId, options)(fetch, basePath);
+        },
+        /**
          * 
          * @summary List interruption groups
          * @param {number} firstResult The offset of the first result
@@ -1460,6 +1668,18 @@ export class InterruptionGroupsApi extends BaseAPI {
     }
 
     /**
+     * Deletes an interruption
+     * @summary Delete interruption
+     * @param {} groupId The id of the interruption being deleted
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof InterruptionGroupsApi
+     */
+    public deleteInterruption(groupId: number, options?: any) {
+        return InterruptionGroupsApiFp(this.configuration).deleteInterruption(groupId, options)(this.fetch, this.basePath);
+    }
+
+    /**
      * 
      * @summary List interruption groups
      * @param {} firstResult The offset of the first result
@@ -1480,43 +1700,6 @@ export class InterruptionGroupsApi extends BaseAPI {
  */
 export const InterruptionsApiFetchParamCreator = function (configuration?: Configuration) {
     return {
-        /**
-         * Deletes an interruption
-         * @summary Delete interruption
-         * @param {number} groupId The id of the interruption being deleted
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteInterruption(groupId: number, options: any = {}): FetchArgs {
-            // verify required parameter 'groupId' is not null or undefined
-            if (groupId === null || groupId === undefined) {
-                throw new RequiredError('groupId','Required parameter groupId was null or undefined when calling deleteInterruption.');
-            }
-            const path = `/admin/interruptiongroups/{groupId}`
-                .replace(`{${"groupId"}}`, String(groupId));
-            const urlObj = url.parse(path, true);
-            const requestOptions = Object.assign({ method: 'DELETE' }, options);
-            const headerParameter = {} as any;
-            const queryParameter = {} as any;
-
-            // authentication bearer required
-            if (configuration && configuration.apiKey) {
-                const apiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                headerParameter["Authorization"] = apiKeyValue;
-            }
-
-            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete urlObj.search;
-            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
-
-            return {
-                url: url.format(urlObj),
-                options: requestOptions,
-            };
-        },
         /**
          * 
          * @summary List interruptions
@@ -1720,25 +1903,6 @@ export const InterruptionsApiFetchParamCreator = function (configuration?: Confi
 export const InterruptionsApiFp = function(configuration?: Configuration) {
     return {
         /**
-         * Deletes an interruption
-         * @summary Delete interruption
-         * @param {number} groupId The id of the interruption being deleted
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteInterruption(groupId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
-            const fetchArgs = InterruptionsApiFetchParamCreator(configuration).deleteInterruption(groupId, options);
-            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
          * 
          * @summary List interruptions
          * @param {number} userId The user whose interruptions we list
@@ -1830,16 +1994,6 @@ export const InterruptionsApiFp = function(configuration?: Configuration) {
 export const InterruptionsApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
     return {
         /**
-         * Deletes an interruption
-         * @summary Delete interruption
-         * @param {number} groupId The id of the interruption being deleted
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteInterruption(groupId: number, options?: any) {
-            return InterruptionsApiFp(configuration).deleteInterruption(groupId, options)(fetch, basePath);
-        },
-        /**
          * 
          * @summary List interruptions
          * @param {number} userId The user whose interruptions we list
@@ -1895,18 +2049,6 @@ export const InterruptionsApiFactory = function (configuration?: Configuration, 
  * @extends {BaseAPI}
  */
 export class InterruptionsApi extends BaseAPI {
-    /**
-     * Deletes an interruption
-     * @summary Delete interruption
-     * @param {} groupId The id of the interruption being deleted
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof InterruptionsApi
-     */
-    public deleteInterruption(groupId: number, options?: any) {
-        return InterruptionsApiFp(this.configuration).deleteInterruption(groupId, options)(this.fetch, this.basePath);
-    }
-
     /**
      * 
      * @summary List interruptions
