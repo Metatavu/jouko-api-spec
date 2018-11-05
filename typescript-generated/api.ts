@@ -276,19 +276,19 @@ export interface PowerMeasurement {
      * @type {number}
      * @memberof PowerMeasurement
      */
-    id?: number;
+    id: number;
     /**
      * Start time of the measurement
      * @type {string}
      * @memberof PowerMeasurement
      */
-    startTime?: string;
+    startTime: string;
     /**
      * End time of the measurement
      * @type {string}
      * @memberof PowerMeasurement
      */
-    endTime?: string;
+    endTime: string;
     /**
      * Type of measurement
      * @type {string}
