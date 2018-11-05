@@ -166,7 +166,7 @@
         }
       },
       "delete" : {
-        "tags" : [ "Interruptions" ],
+        "tags" : [ "Interruption Groups" ],
         "summary" : "Delete interruption",
         "description" : "Deletes an interruption",
         "operationId" : "deleteInterruption",
@@ -352,7 +352,7 @@
     },
     "/users/{userId}/powerMeasurements" : {
       "get" : {
-        "tags" : [ "Measurements" ],
+        "tags" : [ "Devices" ],
         "summary" : "List all measurements",
         "operationId" : "listAllMeasurements",
         "parameters" : [ {

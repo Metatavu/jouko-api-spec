@@ -21,7 +21,7 @@ import java.lang.Exception;
 @Api(description = "the keycloakUsers API")
 @Consumes({ "application/json;charset=utf-8" })
 @Produces({ "application/json;charset=utf-8" })
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2018-10-31T15:44:54.460+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2018-11-05T08:31:11.155+02:00")
 
 
 public interface KeycloakUsersApi  {

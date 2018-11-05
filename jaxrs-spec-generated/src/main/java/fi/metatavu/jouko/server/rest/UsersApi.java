@@ -25,7 +25,7 @@ import java.lang.Exception;
 @Api(description = "the users API")
 @Consumes({ "application/json;charset=utf-8" })
 @Produces({ "application/json;charset=utf-8" })
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2018-10-31T15:44:54.460+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2018-11-05T08:31:11.155+02:00")
 
 
 public interface UsersApi  {
@@ -49,7 +49,7 @@ public interface UsersApi  {
     @Produces({ "application/json;charset&#x3D;utf-8" })
     @ApiOperation(value = "List all measurements", notes = "", response = PowerMeasurement.class, responseContainer = "List", authorizations = {
         @Authorization(value = "bearer")
-    }, tags={ "Measurements",  })
+    }, tags={ "Devices",  })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Success", response = PowerMeasurement.class, responseContainer = "List"),
         @ApiResponse(code = 401, message = "Unauthorized", response = Unauthorized.class),

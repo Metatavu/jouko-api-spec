@@ -23,7 +23,7 @@ import java.lang.Exception;
 @Api(description = "the admin API")
 @Consumes({ "application/json;charset=utf-8" })
 @Produces({ "application/json;charset=utf-8" })
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2018-10-31T15:44:54.460+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2018-11-05T08:31:11.155+02:00")
 
 
 public interface AdminApi  {
@@ -86,7 +86,7 @@ public interface AdminApi  {
     @Produces({ "application/json;charset&#x3D;utf-8" })
     @ApiOperation(value = "Delete interruption", notes = "Deletes an interruption", response = Void.class, authorizations = {
         @Authorization(value = "bearer")
-    }, tags={ "Interruptions",  })
+    }, tags={ "Interruption Groups",  })
     @ApiResponses(value = { 
         @ApiResponse(code = 204, message = "Success", response = Void.class),
         @ApiResponse(code = 401, message = "Unauthorized", response = Unauthorized.class),
