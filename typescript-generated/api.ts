@@ -313,6 +313,12 @@ export interface PowerMeasurement {
      * @memberof PowerMeasurement
      */
     phaseNumber?: number;
+    /**
+     * 
+     * @type {PowerMeasurementDevice}
+     * @memberof PowerMeasurement
+     */
+    device?: PowerMeasurementDevice;
 }
 
 /**
@@ -327,6 +333,20 @@ export namespace PowerMeasurement {
     export enum MeasurementTypeEnum {
         AVERAGE = <any> 'AVERAGE'
     }
+}
+
+/**
+ * 
+ * @export
+ * @interface PowerMeasurementDevice
+ */
+export interface PowerMeasurementDevice {
+    /**
+     * devicename
+     * @type {string}
+     * @memberof PowerMeasurementDevice
+     */
+    name?: string;
 }
 
 /**
