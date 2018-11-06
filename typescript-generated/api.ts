@@ -319,6 +319,12 @@ export interface PowerMeasurement {
      * @memberof PowerMeasurement
      */
     device?: PowerMeasurementDevice;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PowerMeasurement
+     */
+    relayIsOpen?: boolean;
 }
 
 /**
@@ -919,8 +925,8 @@ export const DevicesApiFetchParamCreator = function (configuration?: Configurati
          * 
          * @summary List all measurements
          * @param {number} userId The id of the user
-         * @param {string} fromTime 
-         * @param {string} toTime 
+         * @param {string} fromTime List measurements that start after this point of time, inclusive
+         * @param {string} toTime List measurements that end before this point of time, exclusive
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1181,8 +1187,8 @@ export const DevicesApiFp = function(configuration?: Configuration) {
          * 
          * @summary List all measurements
          * @param {number} userId The id of the user
-         * @param {string} fromTime 
-         * @param {string} toTime 
+         * @param {string} fromTime List measurements that start after this point of time, inclusive
+         * @param {string} toTime List measurements that end before this point of time, exclusive
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1305,8 +1311,8 @@ export const DevicesApiFactory = function (configuration?: Configuration, fetch?
          * 
          * @summary List all measurements
          * @param {number} userId The id of the user
-         * @param {string} fromTime 
-         * @param {string} toTime 
+         * @param {string} fromTime List measurements that start after this point of time, inclusive
+         * @param {string} toTime List measurements that end before this point of time, exclusive
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1400,8 +1406,8 @@ export class DevicesApi extends BaseAPI {
      * 
      * @summary List all measurements
      * @param {} userId The id of the user
-     * @param {} fromTime 
-     * @param {} toTime 
+     * @param {} fromTime List measurements that start after this point of time, inclusive
+     * @param {} toTime List measurements that end before this point of time, exclusive
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DevicesApi
