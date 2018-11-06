@@ -1,4 +1,4 @@
-## jouko-ts-client@0.0.25
+## jouko-ts-client@0.0.26
 
 This generator creates TypeScript/JavaScript client that utilizes [Fetch API](https://fetch.spec.whatwg.org/). The generated Node module can be used in the following environments:
 
@@ -36,7 +36,7 @@ navigate to the folder of your consuming project and run one of next commando's.
 _published:_
 
 ```
-npm install jouko-ts-client@0.0.25 --save
+npm install jouko-ts-client@0.0.26 --save
 ```
 
 _unPublished (not recommended):_

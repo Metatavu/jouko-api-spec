@@ -300,7 +300,7 @@ export interface PowerMeasurement {
      * @type {number}
      * @memberof PowerMeasurement
      */
-    measurementValue?: number;
+    measurementValue: number;
     /**
      * Device id
      * @type {number}
@@ -312,7 +312,7 @@ export interface PowerMeasurement {
      * @type {number}
      * @memberof PowerMeasurement
      */
-    phaseNumber?: number;
+    phaseNumber: number;
     /**
      * 
      * @type {PowerMeasurementDevice}
