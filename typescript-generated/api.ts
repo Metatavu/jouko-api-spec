@@ -919,13 +919,23 @@ export const DevicesApiFetchParamCreator = function (configuration?: Configurati
          * 
          * @summary List all measurements
          * @param {number} userId The id of the user
+         * @param {string} fromTime 
+         * @param {string} toTime 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listAllMeasurements(userId: number, options: any = {}): FetchArgs {
+        listAllMeasurements(userId: number, fromTime: string, toTime: string, options: any = {}): FetchArgs {
             // verify required parameter 'userId' is not null or undefined
             if (userId === null || userId === undefined) {
                 throw new RequiredError('userId','Required parameter userId was null or undefined when calling listAllMeasurements.');
+            }
+            // verify required parameter 'fromTime' is not null or undefined
+            if (fromTime === null || fromTime === undefined) {
+                throw new RequiredError('fromTime','Required parameter fromTime was null or undefined when calling listAllMeasurements.');
+            }
+            // verify required parameter 'toTime' is not null or undefined
+            if (toTime === null || toTime === undefined) {
+                throw new RequiredError('toTime','Required parameter toTime was null or undefined when calling listAllMeasurements.');
             }
             const path = `/users/{userId}/powerMeasurements`
                 .replace(`{${"userId"}}`, String(userId));
@@ -940,6 +950,14 @@ export const DevicesApiFetchParamCreator = function (configuration?: Configurati
 					? configuration.apiKey("Authorization")
 					: configuration.apiKey;
                 headerParameter["Authorization"] = apiKeyValue;
+            }
+
+            if (fromTime !== undefined) {
+                queryParameter['fromTime'] = fromTime;
+            }
+
+            if (toTime !== undefined) {
+                queryParameter['toTime'] = toTime;
             }
 
             urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
@@ -1163,11 +1181,13 @@ export const DevicesApiFp = function(configuration?: Configuration) {
          * 
          * @summary List all measurements
          * @param {number} userId The id of the user
+         * @param {string} fromTime 
+         * @param {string} toTime 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listAllMeasurements(userId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<PowerMeasurement>> {
-            const fetchArgs = DevicesApiFetchParamCreator(configuration).listAllMeasurements(userId, options);
+        listAllMeasurements(userId: number, fromTime: string, toTime: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<PowerMeasurement>> {
+            const fetchArgs = DevicesApiFetchParamCreator(configuration).listAllMeasurements(userId, fromTime, toTime, options);
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -1285,11 +1305,13 @@ export const DevicesApiFactory = function (configuration?: Configuration, fetch?
          * 
          * @summary List all measurements
          * @param {number} userId The id of the user
+         * @param {string} fromTime 
+         * @param {string} toTime 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listAllMeasurements(userId: number, options?: any) {
-            return DevicesApiFp(configuration).listAllMeasurements(userId, options)(fetch, basePath);
+        listAllMeasurements(userId: number, fromTime: string, toTime: string, options?: any) {
+            return DevicesApiFp(configuration).listAllMeasurements(userId, fromTime, toTime, options)(fetch, basePath);
         },
         /**
          * 
@@ -1378,12 +1400,14 @@ export class DevicesApi extends BaseAPI {
      * 
      * @summary List all measurements
      * @param {} userId The id of the user
+     * @param {} fromTime 
+     * @param {} toTime 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DevicesApi
      */
-    public listAllMeasurements(userId: number, options?: any) {
-        return DevicesApiFp(this.configuration).listAllMeasurements(userId, options)(this.fetch, this.basePath);
+    public listAllMeasurements(userId: number, fromTime: string, toTime: string, options?: any) {
+        return DevicesApiFp(this.configuration).listAllMeasurements(userId, fromTime, toTime, options)(this.fetch, this.basePath);
     }
 
     /**
