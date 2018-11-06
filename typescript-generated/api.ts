@@ -2288,6 +2288,46 @@ export const UsersApiFetchParamCreator = function (configuration?: Configuration
         },
         /**
          * 
+         * @summary List users
+         * @param {string} token Keycloak token
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listKeycloakUsers(token: string, options: any = {}): FetchArgs {
+            // verify required parameter 'token' is not null or undefined
+            if (token === null || token === undefined) {
+                throw new RequiredError('token','Required parameter token was null or undefined when calling listKeycloakUsers.');
+            }
+            const path = `/keycloakUsers`;
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'GET' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            // authentication bearer required
+            if (configuration && configuration.apiKey) {
+                const apiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                headerParameter["Authorization"] = apiKeyValue;
+            }
+
+            if (token !== undefined) {
+                queryParameter['token'] = token;
+            }
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Retreive user
          * @param {number} userId The id of the user
          * @param {*} [options] Override http request option.
@@ -2437,6 +2477,25 @@ export const UsersApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary List users
+         * @param {string} token Keycloak token
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listKeycloakUsers(token: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
+            const fetchArgs = UsersApiFetchParamCreator(configuration).listKeycloakUsers(token, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
          * @summary Retreive user
          * @param {number} userId The id of the user
          * @param {*} [options] Override http request option.
@@ -2516,6 +2575,16 @@ export const UsersApiFactory = function (configuration?: Configuration, fetch?: 
         },
         /**
          * 
+         * @summary List users
+         * @param {string} token Keycloak token
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listKeycloakUsers(token: string, options?: any) {
+            return UsersApiFp(configuration).listKeycloakUsers(token, options)(fetch, basePath);
+        },
+        /**
+         * 
          * @summary Retreive user
          * @param {number} userId The id of the user
          * @param {*} [options] Override http request option.
@@ -2580,6 +2649,18 @@ export class UsersApi extends BaseAPI {
      */
     public listAllUsers(firstResult: number, maxResults: number, options?: any) {
         return UsersApiFp(this.configuration).listAllUsers(firstResult, maxResults, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @summary List users
+     * @param {} token Keycloak token
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public listKeycloakUsers(token: string, options?: any) {
+        return UsersApiFp(this.configuration).listKeycloakUsers(token, options)(this.fetch, this.basePath);
     }
 
     /**
