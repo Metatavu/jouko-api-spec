@@ -387,6 +387,30 @@ export interface User {
      * @memberof User
      */
     keycloakId: string;
+    /**
+     * The firstname id of the user
+     * @type {string}
+     * @memberof User
+     */
+    firstname?: string;
+    /**
+     * The lastname id of the user
+     * @type {string}
+     * @memberof User
+     */
+    lastname?: string;
+    /**
+     * The email id of the user
+     * @type {string}
+     * @memberof User
+     */
+    email?: string;
+    /**
+     * The username id of the user
+     * @type {string}
+     * @memberof User
+     */
+    username?: string;
 }
 
 
@@ -2482,7 +2506,7 @@ export const UsersApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listKeycloakUsers(token: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
+        listKeycloakUsers(token: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<User>> {
             const fetchArgs = UsersApiFetchParamCreator(configuration).listKeycloakUsers(token, options);
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
