@@ -392,13 +392,13 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    firstname?: string;
+    firstName?: string;
     /**
      * The lastname id of the user
      * @type {string}
      * @memberof User
      */
-    lastname?: string;
+    lastName?: string;
     /**
      * The email id of the user
      * @type {string}
