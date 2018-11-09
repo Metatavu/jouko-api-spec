@@ -1057,6 +1057,67 @@ export const DevicesApiFetchParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary List all measurements by device
+         * @param {number} userId The id of the user
+         * @param {number} deviceId The id of the device
+         * @param {string} fromTime List measurements that start after this point of time, inclusive
+         * @param {string} toTime List measurements that end before this point of time, exclusive
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listMeasurementsByDevice(userId: number, deviceId: number, fromTime: string, toTime: string, options: any = {}): FetchArgs {
+            // verify required parameter 'userId' is not null or undefined
+            if (userId === null || userId === undefined) {
+                throw new RequiredError('userId','Required parameter userId was null or undefined when calling listMeasurementsByDevice.');
+            }
+            // verify required parameter 'deviceId' is not null or undefined
+            if (deviceId === null || deviceId === undefined) {
+                throw new RequiredError('deviceId','Required parameter deviceId was null or undefined when calling listMeasurementsByDevice.');
+            }
+            // verify required parameter 'fromTime' is not null or undefined
+            if (fromTime === null || fromTime === undefined) {
+                throw new RequiredError('fromTime','Required parameter fromTime was null or undefined when calling listMeasurementsByDevice.');
+            }
+            // verify required parameter 'toTime' is not null or undefined
+            if (toTime === null || toTime === undefined) {
+                throw new RequiredError('toTime','Required parameter toTime was null or undefined when calling listMeasurementsByDevice.');
+            }
+            const path = `/users/{userId}/devices/{deviceId}/powerMeasurements`
+                .replace(`{${"userId"}}`, String(userId))
+                .replace(`{${"deviceId"}}`, String(deviceId));
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'GET' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            // authentication bearer required
+            if (configuration && configuration.apiKey) {
+                const apiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                headerParameter["Authorization"] = apiKeyValue;
+            }
+
+            if (fromTime !== undefined) {
+                queryParameter['fromTime'] = fromTime;
+            }
+
+            if (toTime !== undefined) {
+                queryParameter['toTime'] = toTime;
+            }
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Retreive device
          * @param {number} deviceId The id of the device
          * @param {*} [options] Override http request option.
@@ -1251,6 +1312,28 @@ export const DevicesApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary List all measurements by device
+         * @param {number} userId The id of the user
+         * @param {number} deviceId The id of the device
+         * @param {string} fromTime List measurements that start after this point of time, inclusive
+         * @param {string} toTime List measurements that end before this point of time, exclusive
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listMeasurementsByDevice(userId: number, deviceId: number, fromTime: string, toTime: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<PowerMeasurement>> {
+            const fetchArgs = DevicesApiFetchParamCreator(configuration).listMeasurementsByDevice(userId, deviceId, fromTime, toTime, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
          * @summary Retreive device
          * @param {number} deviceId The id of the device
          * @param {*} [options] Override http request option.
@@ -1357,6 +1440,19 @@ export const DevicesApiFactory = function (configuration?: Configuration, fetch?
         },
         /**
          * 
+         * @summary List all measurements by device
+         * @param {number} userId The id of the user
+         * @param {number} deviceId The id of the device
+         * @param {string} fromTime List measurements that start after this point of time, inclusive
+         * @param {string} toTime List measurements that end before this point of time, exclusive
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listMeasurementsByDevice(userId: number, deviceId: number, fromTime: string, toTime: string, options?: any) {
+            return DevicesApiFp(configuration).listMeasurementsByDevice(userId, deviceId, fromTime, toTime, options)(fetch, basePath);
+        },
+        /**
+         * 
          * @summary Retreive device
          * @param {number} deviceId The id of the device
          * @param {*} [options] Override http request option.
@@ -1452,6 +1548,21 @@ export class DevicesApi extends BaseAPI {
      */
     public listDevices(userId: number, firstResult: number, maxResults: number, options?: any) {
         return DevicesApiFp(this.configuration).listDevices(userId, firstResult, maxResults, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @summary List all measurements by device
+     * @param {} userId The id of the user
+     * @param {} deviceId The id of the device
+     * @param {} fromTime List measurements that start after this point of time, inclusive
+     * @param {} toTime List measurements that end before this point of time, exclusive
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DevicesApi
+     */
+    public listMeasurementsByDevice(userId: number, deviceId: number, fromTime: string, toTime: string, options?: any) {
+        return DevicesApiFp(this.configuration).listMeasurementsByDevice(userId, deviceId, fromTime, toTime, options)(this.fetch, this.basePath);
     }
 
     /**
