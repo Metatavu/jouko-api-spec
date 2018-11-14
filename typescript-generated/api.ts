@@ -2291,122 +2291,6 @@ export class InterruptionsApi extends BaseAPI {
 }
 
 /**
- * UpdatesApi - fetch parameter creator
- * @export
- */
-export const UpdatesApiFetchParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Create new update
-         * @param {InterruptionGroup} body The body of the request
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createNewUpdate(body: InterruptionGroup, options: any = {}): FetchArgs {
-            // verify required parameter 'body' is not null or undefined
-            if (body === null || body === undefined) {
-                throw new RequiredError('body','Required parameter body was null or undefined when calling createNewUpdate.');
-            }
-            const path = `/admin/update/`;
-            const urlObj = url.parse(path, true);
-            const requestOptions = Object.assign({ method: 'POST' }, options);
-            const headerParameter = {} as any;
-            const queryParameter = {} as any;
-
-            // authentication bearer required
-            if (configuration && configuration.apiKey) {
-                const apiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                headerParameter["Authorization"] = apiKeyValue;
-            }
-
-            headerParameter['Content-Type'] = 'application/json';
-
-            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete urlObj.search;
-            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
-            requestOptions.body = JSON.stringify(body || {});
-
-            return {
-                url: url.format(urlObj),
-                options: requestOptions,
-            };
-        },
-    }
-};
-
-/**
- * UpdatesApi - functional programming interface
- * @export
- */
-export const UpdatesApiFp = function(configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Create new update
-         * @param {InterruptionGroup} body The body of the request
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createNewUpdate(body: InterruptionGroup, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
-            const fetchArgs = UpdatesApiFetchParamCreator(configuration).createNewUpdate(body, options);
-            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response;
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-    }
-};
-
-/**
- * UpdatesApi - factory interface
- * @export
- */
-export const UpdatesApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
-    return {
-        /**
-         * 
-         * @summary Create new update
-         * @param {InterruptionGroup} body The body of the request
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createNewUpdate(body: InterruptionGroup, options?: any) {
-            return UpdatesApiFp(configuration).createNewUpdate(body, options)(fetch, basePath);
-        },
-    };
-};
-
-/**
- * UpdatesApi - object-oriented interface
- * @export
- * @class UpdatesApi
- * @extends {BaseAPI}
- */
-export class UpdatesApi extends BaseAPI {
-    /**
-     * 
-     * @summary Create new update
-     * @param {} body The body of the request
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UpdatesApi
-     */
-    public createNewUpdate(body: InterruptionGroup, options?: any) {
-        return UpdatesApiFp(this.configuration).createNewUpdate(body, options)(this.fetch, this.basePath);
-    }
-
-}
-
-/**
  * UsersApi - fetch parameter creator
  * @export
  */
@@ -2416,10 +2300,11 @@ export const UsersApiFetchParamCreator = function (configuration?: Configuration
          * 
          * @summary Create user
          * @param {User} body The user to be created
+         * @param {string} [token] Keycloak token
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createUser(body: User, options: any = {}): FetchArgs {
+        createUser(body: User, token?: string, options: any = {}): FetchArgs {
             // verify required parameter 'body' is not null or undefined
             if (body === null || body === undefined) {
                 throw new RequiredError('body','Required parameter body was null or undefined when calling createUser.');
@@ -2436,6 +2321,10 @@ export const UsersApiFetchParamCreator = function (configuration?: Configuration
 					? configuration.apiKey("Authorization")
 					: configuration.apiKey;
                 headerParameter["Authorization"] = apiKeyValue;
+            }
+
+            if (token !== undefined) {
+                queryParameter['token'] = token;
             }
 
             headerParameter['Content-Type'] = 'application/json';
@@ -2668,11 +2557,12 @@ export const UsersApiFp = function(configuration?: Configuration) {
          * 
          * @summary Create user
          * @param {User} body The user to be created
+         * @param {string} [token] Keycloak token
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createUser(body: User, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
-            const fetchArgs = UsersApiFetchParamCreator(configuration).createUser(body, options);
+        createUser(body: User, token?: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<User> {
+            const fetchArgs = UsersApiFetchParamCreator(configuration).createUser(body, token, options);
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -2793,11 +2683,12 @@ export const UsersApiFactory = function (configuration?: Configuration, fetch?: 
          * 
          * @summary Create user
          * @param {User} body The user to be created
+         * @param {string} [token] Keycloak token
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createUser(body: User, options?: any) {
-            return UsersApiFp(configuration).createUser(body, options)(fetch, basePath);
+        createUser(body: User, token?: string, options?: any) {
+            return UsersApiFp(configuration).createUser(body, token, options)(fetch, basePath);
         },
         /**
          * 
@@ -2865,12 +2756,13 @@ export class UsersApi extends BaseAPI {
      * 
      * @summary Create user
      * @param {} body The user to be created
+     * @param {} [token] Keycloak token
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
      */
-    public createUser(body: User, options?: any) {
-        return UsersApiFp(this.configuration).createUser(body, options)(this.fetch, this.basePath);
+    public createUser(body: User, token?: string, options?: any) {
+        return UsersApiFp(this.configuration).createUser(body, token, options)(this.fetch, this.basePath);
     }
 
     /**
