@@ -120,7 +120,7 @@ export interface Device {
      * @type {number}
      * @memberof Device
      */
-    id: number;
+    id?: number;
     /**
      * The name of the device
      * @type {string}
