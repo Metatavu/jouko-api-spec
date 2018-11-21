@@ -461,6 +461,43 @@ export const ControllerDevicesApiFetchParamCreator = function (configuration?: C
         },
         /**
          * 
+         * @summary Delete controller device
+         * @param {number} controllerDeviceId The id of the controller device
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteControllerDevice(controllerDeviceId: number, options: any = {}): FetchArgs {
+            // verify required parameter 'controllerDeviceId' is not null or undefined
+            if (controllerDeviceId === null || controllerDeviceId === undefined) {
+                throw new RequiredError('controllerDeviceId','Required parameter controllerDeviceId was null or undefined when calling deleteControllerDevice.');
+            }
+            const path = `/admin/controllerDevices/{controllerDeviceId}`
+                .replace(`{${"controllerDeviceId"}}`, String(controllerDeviceId));
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'DELETE' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            // authentication bearer required
+            if (configuration && configuration.apiKey) {
+                const apiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                headerParameter["Authorization"] = apiKeyValue;
+            }
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
+        /**
+         * 
          * @summary List all controller devices
          * @param {number} firstResult The offset of the first result
          * @param {number} maxResults The maximum number of results
@@ -620,6 +657,25 @@ export const ControllerDevicesApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Delete controller device
+         * @param {number} controllerDeviceId The id of the controller device
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteControllerDevice(controllerDeviceId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
+            const fetchArgs = ControllerDevicesApiFetchParamCreator(configuration).deleteControllerDevice(controllerDeviceId, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response;
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
          * @summary List all controller devices
          * @param {number} firstResult The offset of the first result
          * @param {number} maxResults The maximum number of results
@@ -698,6 +754,16 @@ export const ControllerDevicesApiFactory = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary Delete controller device
+         * @param {number} controllerDeviceId The id of the controller device
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteControllerDevice(controllerDeviceId: number, options?: any) {
+            return ControllerDevicesApiFp(configuration).deleteControllerDevice(controllerDeviceId, options)(fetch, basePath);
+        },
+        /**
+         * 
          * @summary List all controller devices
          * @param {number} firstResult The offset of the first result
          * @param {number} maxResults The maximum number of results
@@ -748,6 +814,18 @@ export class ControllerDevicesApi extends BaseAPI {
      */
     public createControllerDevice(body: ControllerDevice, options?: any) {
         return ControllerDevicesApiFp(this.configuration).createControllerDevice(body, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @summary Delete controller device
+     * @param {} controllerDeviceId The id of the controller device
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ControllerDevicesApi
+     */
+    public deleteControllerDevice(controllerDeviceId: number, options?: any) {
+        return ControllerDevicesApiFp(this.configuration).deleteControllerDevice(controllerDeviceId, options)(this.fetch, this.basePath);
     }
 
     /**
