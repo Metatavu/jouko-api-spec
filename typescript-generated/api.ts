@@ -380,7 +380,7 @@ export interface User {
      * @type {number}
      * @memberof User
      */
-    id?: number;
+    userId?: number;
     /**
      * The keycloak id of the user
      * @type {string}
