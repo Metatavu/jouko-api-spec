@@ -88,7 +88,7 @@ export interface ControllerDevice {
      * @type {number}
      * @memberof ControllerDevice
      */
-    id: number;
+    id?: number;
     /**
      * The EUI of the controller device
      * @type {string}
@@ -380,7 +380,7 @@ export interface User {
      * @type {number}
      * @memberof User
      */
-    userId?: number;
+    id?: number;
     /**
      * The keycloak id of the user
      * @type {string}
