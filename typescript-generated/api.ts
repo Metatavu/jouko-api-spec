@@ -358,6 +358,20 @@ export interface PowerMeasurementDevice {
 /**
  * 
  * @export
+ * @interface TODO
+ */
+export interface TODO {
+    /**
+     * 
+     * @type {number}
+     * @memberof TODO
+     */
+    controllerId?: number;
+}
+
+/**
+ * 
+ * @export
  * @interface Unauthorized
  */
 export interface Unauthorized {
@@ -460,21 +474,20 @@ export const ControllerDevicesApiFetchParamCreator = function (configuration?: C
             };
         },
         /**
-         * 
-         * @summary Delete controller device
-         * @param {number} controllerDeviceId The id of the controller device
+         * Deletes an controller
+         * @summary Delete controller
+         * @param {TODO} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteControllerDevice(controllerDeviceId: number, options: any = {}): FetchArgs {
-            // verify required parameter 'controllerDeviceId' is not null or undefined
-            if (controllerDeviceId === null || controllerDeviceId === undefined) {
-                throw new RequiredError('controllerDeviceId','Required parameter controllerDeviceId was null or undefined when calling deleteControllerDevice.');
+        deleteControllerDevice(body: TODO, options: any = {}): FetchArgs {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling deleteControllerDevice.');
             }
-            const path = `/admin/controllerDevices/{controllerDeviceId}`
-                .replace(`{${"controllerDeviceId"}}`, String(controllerDeviceId));
+            const path = `/admin/controllerDevices/delete`;
             const urlObj = url.parse(path, true);
-            const requestOptions = Object.assign({ method: 'DELETE' }, options);
+            const requestOptions = Object.assign({ method: 'POST' }, options);
             const headerParameter = {} as any;
             const queryParameter = {} as any;
 
@@ -486,10 +499,13 @@ export const ControllerDevicesApiFetchParamCreator = function (configuration?: C
                 headerParameter["Authorization"] = apiKeyValue;
             }
 
+            headerParameter['Content-Type'] = 'application/json';
+
             urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete urlObj.search;
             requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+            requestOptions.body = JSON.stringify(body || {});
 
             return {
                 url: url.format(urlObj),
@@ -656,14 +672,14 @@ export const ControllerDevicesApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         * 
-         * @summary Delete controller device
-         * @param {number} controllerDeviceId The id of the controller device
+         * Deletes an controller
+         * @summary Delete controller
+         * @param {TODO} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteControllerDevice(controllerDeviceId: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
-            const fetchArgs = ControllerDevicesApiFetchParamCreator(configuration).deleteControllerDevice(controllerDeviceId, options);
+        deleteControllerDevice(body: TODO, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
+            const fetchArgs = ControllerDevicesApiFetchParamCreator(configuration).deleteControllerDevice(body, options);
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -753,14 +769,14 @@ export const ControllerDevicesApiFactory = function (configuration?: Configurati
             return ControllerDevicesApiFp(configuration).createControllerDevice(body, options)(fetch, basePath);
         },
         /**
-         * 
-         * @summary Delete controller device
-         * @param {number} controllerDeviceId The id of the controller device
+         * Deletes an controller
+         * @summary Delete controller
+         * @param {TODO} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteControllerDevice(controllerDeviceId: number, options?: any) {
-            return ControllerDevicesApiFp(configuration).deleteControllerDevice(controllerDeviceId, options)(fetch, basePath);
+        deleteControllerDevice(body: TODO, options?: any) {
+            return ControllerDevicesApiFp(configuration).deleteControllerDevice(body, options)(fetch, basePath);
         },
         /**
          * 
@@ -817,15 +833,15 @@ export class ControllerDevicesApi extends BaseAPI {
     }
 
     /**
-     * 
-     * @summary Delete controller device
-     * @param {} controllerDeviceId The id of the controller device
+     * Deletes an controller
+     * @summary Delete controller
+     * @param {} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ControllerDevicesApi
      */
-    public deleteControllerDevice(controllerDeviceId: number, options?: any) {
-        return ControllerDevicesApiFp(this.configuration).deleteControllerDevice(controllerDeviceId, options)(this.fetch, this.basePath);
+    public deleteControllerDevice(body: TODO, options?: any) {
+        return ControllerDevicesApiFp(this.configuration).deleteControllerDevice(body, options)(this.fetch, this.basePath);
     }
 
     /**
