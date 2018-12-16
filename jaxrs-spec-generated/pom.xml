@@ -4,7 +4,7 @@
   <artifactId>jouko-api-spec</artifactId>
   <packaging>jar</packaging>
   <name>jouko-api-spec</name>
-  <version>0.0.20-SNAPSHOT</version>
+  <version>0.0.20</version>
   <description>JouKo API specifications</description>
   <url>https://github.com/Metatavu/jouko-api-spec</url>
 
@@ -33,7 +33,7 @@
     <developerConnection>scm:git:git@github.com:Metatavu/jouko-api-spec.git</developerConnection>
     <url>git@github.com:Metatavu/jouko-api-spec.git</url>
     <connection>scm:git:git@github.com:Metatavu/jouko-api-spec.git</connection>
-    <tag>HEAD</tag>
+    <tag>0.0.20</tag>
   </scm>
 
   <organization>
