@@ -23,7 +23,7 @@ import java.lang.Exception;
 @Api(description = "the admin API")
 @Consumes({ "application/json;charset=utf-8" })
 @Produces({ "application/json;charset=utf-8" })
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2018-11-05T08:31:11.155+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2018-12-16T17:44:01.804+02:00")
 
 
 public interface AdminApi  {
@@ -78,7 +78,20 @@ public interface AdminApi  {
         @ApiResponse(code = 200, message = "Success", response = User.class),
         @ApiResponse(code = 401, message = "Unauthorized", response = Unauthorized.class),
         @ApiResponse(code = 500, message = "Internal server error", response = InternalServerError.class) })
-    public Response createUser(@Valid User body) throws Exception;
+    public Response createUser(@Valid User body,@QueryParam("token")   @ApiParam("Keycloak token")  String token) throws Exception;
+
+    @DELETE
+    @Path("/controllerDevices/{controllerDeviceId}")
+    @Consumes({ "application/json;charset&#x3D;utf-8" })
+    @Produces({ "application/json;charset&#x3D;utf-8" })
+    @ApiOperation(value = "Delete controller", notes = "Deletes an controller", response = Void.class, authorizations = {
+        @Authorization(value = "bearer")
+    }, tags={ "ControllerDevices",  })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 204, message = "Success", response = Void.class),
+        @ApiResponse(code = 401, message = "Unauthorized", response = Unauthorized.class),
+        @ApiResponse(code = 500, message = "Internal server error", response = InternalServerError.class) })
+    public Response deleteControllerDevice(@PathParam("controllerDeviceId") @ApiParam("The id of the controller") Long controllerDeviceId) throws Exception;
 
     @DELETE
     @Path("/interruptiongroups/{groupId}")

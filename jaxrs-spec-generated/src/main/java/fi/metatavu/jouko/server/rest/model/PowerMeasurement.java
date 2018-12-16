@@ -1,5 +1,6 @@
 package fi.metatavu.jouko.server.rest.model;
 
+import fi.metatavu.jouko.server.rest.model.PowerMeasurementDevice;
 import java.time.OffsetDateTime;
 import javax.validation.constraints.*;
 import javax.validation.Valid;
@@ -48,7 +49,9 @@ public enum MeasurementTypeEnum {
   private @Valid MeasurementTypeEnum measurementType = null;
   private @Valid Double measurementValue = null;
   private @Valid Long deviceId = null;
-  private @Valid Long phaseNumber = null;
+  private @Valid Integer phaseNumber = null;
+  private @Valid PowerMeasurementDevice device = null;
+  private @Valid Boolean relayIsOpen = null;
 
   /**
    * Measurement id
@@ -59,7 +62,8 @@ public enum MeasurementTypeEnum {
   }
 
   
-  @ApiModelProperty(value = "Measurement id")
+  @ApiModelProperty(required = true, value = "Measurement id")
+  @NotNull
   public Long getId() {
     return id;
   }
@@ -76,7 +80,8 @@ public enum MeasurementTypeEnum {
   }
 
   
-  @ApiModelProperty(value = "Start time of the measurement")
+  @ApiModelProperty(required = true, value = "Start time of the measurement")
+  @NotNull
   public OffsetDateTime getStartTime() {
     return startTime;
   }
@@ -93,7 +98,8 @@ public enum MeasurementTypeEnum {
   }
 
   
-  @ApiModelProperty(value = "End time of the measurement")
+  @ApiModelProperty(required = true, value = "End time of the measurement")
+  @NotNull
   public OffsetDateTime getEndTime() {
     return endTime;
   }
@@ -126,7 +132,8 @@ public enum MeasurementTypeEnum {
   }
 
   
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
+  @NotNull
   public Double getMeasurementValue() {
     return measurementValue;
   }
@@ -154,18 +161,51 @@ public enum MeasurementTypeEnum {
   /**
    * Phasenumber
    **/
-  public PowerMeasurement phaseNumber(Long phaseNumber) {
+  public PowerMeasurement phaseNumber(Integer phaseNumber) {
     this.phaseNumber = phaseNumber;
     return this;
   }
 
   
-  @ApiModelProperty(value = "Phasenumber")
-  public Long getPhaseNumber() {
+  @ApiModelProperty(required = true, value = "Phasenumber")
+  @NotNull
+  public Integer getPhaseNumber() {
     return phaseNumber;
   }
-  public void setPhaseNumber(Long phaseNumber) {
+  public void setPhaseNumber(Integer phaseNumber) {
     this.phaseNumber = phaseNumber;
+  }
+
+  /**
+   **/
+  public PowerMeasurement device(PowerMeasurementDevice device) {
+    this.device = device;
+    return this;
+  }
+
+  
+  @ApiModelProperty(value = "")
+  public PowerMeasurementDevice getDevice() {
+    return device;
+  }
+  public void setDevice(PowerMeasurementDevice device) {
+    this.device = device;
+  }
+
+  /**
+   **/
+  public PowerMeasurement relayIsOpen(Boolean relayIsOpen) {
+    this.relayIsOpen = relayIsOpen;
+    return this;
+  }
+
+  
+  @ApiModelProperty(value = "")
+  public Boolean isRelayIsOpen() {
+    return relayIsOpen;
+  }
+  public void setRelayIsOpen(Boolean relayIsOpen) {
+    this.relayIsOpen = relayIsOpen;
   }
 
 
@@ -184,12 +224,14 @@ public enum MeasurementTypeEnum {
         Objects.equals(measurementType, powerMeasurement.measurementType) &&
         Objects.equals(measurementValue, powerMeasurement.measurementValue) &&
         Objects.equals(deviceId, powerMeasurement.deviceId) &&
-        Objects.equals(phaseNumber, powerMeasurement.phaseNumber);
+        Objects.equals(phaseNumber, powerMeasurement.phaseNumber) &&
+        Objects.equals(device, powerMeasurement.device) &&
+        Objects.equals(relayIsOpen, powerMeasurement.relayIsOpen);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, startTime, endTime, measurementType, measurementValue, deviceId, phaseNumber);
+    return Objects.hash(id, startTime, endTime, measurementType, measurementValue, deviceId, phaseNumber, device, relayIsOpen);
   }
 
   @Override
@@ -204,6 +246,8 @@ public enum MeasurementTypeEnum {
     sb.append("    measurementValue: ").append(toIndentedString(measurementValue)).append("\n");
     sb.append("    deviceId: ").append(toIndentedString(deviceId)).append("\n");
     sb.append("    phaseNumber: ").append(toIndentedString(phaseNumber)).append("\n");
+    sb.append("    device: ").append(toIndentedString(device)).append("\n");
+    sb.append("    relayIsOpen: ").append(toIndentedString(relayIsOpen)).append("\n");
     sb.append("}");
     return sb.toString();
   }

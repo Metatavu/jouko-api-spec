@@ -24,8 +24,7 @@ public class ControllerDevice   {
   }
 
   
-  @ApiModelProperty(required = true, value = "Controller device id")
-  @NotNull
+  @ApiModelProperty(value = "Controller device id")
   public Long getId() {
     return id;
   }

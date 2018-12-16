@@ -348,6 +348,37 @@
             }
           }
         }
+      },
+      "delete" : {
+        "tags" : [ "ControllerDevices" ],
+        "summary" : "Delete controller",
+        "description" : "Deletes an controller",
+        "operationId" : "deleteControllerDevice",
+        "parameters" : [ {
+          "name" : "controllerDeviceId",
+          "in" : "path",
+          "description" : "The id of the controller",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Success"
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "schema" : {
+              "$ref" : "#/definitions/Unauthorized"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
       }
     },
     "/users/{userId}/powerMeasurements" : {
@@ -361,7 +392,80 @@
           "description" : "The id of the user",
           "required" : true,
           "type" : "integer",
-          "format" : "int6"
+          "format" : "int64"
+        }, {
+          "name" : "fromTime",
+          "in" : "query",
+          "description" : "List measurements that start after this point of time, inclusive",
+          "required" : true,
+          "type" : "string",
+          "format" : "date-time"
+        }, {
+          "name" : "toTime",
+          "in" : "query",
+          "description" : "List measurements that end before this point of time, exclusive",
+          "required" : true,
+          "type" : "string",
+          "format" : "date-time"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/PowerMeasurement"
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "schema" : {
+              "$ref" : "#/definitions/Unauthorized"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}/devices/{deviceId}/powerMeasurements" : {
+      "get" : {
+        "tags" : [ "Devices" ],
+        "summary" : "List all measurements by device",
+        "operationId" : "listMeasurementsByDevice",
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "The id of the user",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "deviceId",
+          "in" : "path",
+          "description" : "The id of the device",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "fromTime",
+          "in" : "query",
+          "description" : "List measurements that start after this point of time, inclusive",
+          "required" : true,
+          "type" : "string",
+          "format" : "date-time"
+        }, {
+          "name" : "toTime",
+          "in" : "query",
+          "description" : "List measurements that end before this point of time, exclusive",
+          "required" : true,
+          "type" : "string",
+          "format" : "date-time"
         } ],
         "responses" : {
           "200" : {
@@ -595,6 +699,12 @@
           "schema" : {
             "$ref" : "#/definitions/User"
           }
+        }, {
+          "name" : "token",
+          "in" : "query",
+          "description" : "Keycloak token",
+          "required" : false,
+          "type" : "string"
         } ],
         "responses" : {
           "200" : {
@@ -712,6 +822,43 @@
             "description" : "Success",
             "schema" : {
               "$ref" : "#/definitions/User"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "schema" : {
+              "$ref" : "#/definitions/Unauthorized"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/InternalServerError"
+            }
+          }
+        }
+      }
+    },
+    "/keycloakUsers" : {
+      "get" : {
+        "tags" : [ "Users" ],
+        "summary" : "List users",
+        "operationId" : "listKeycloakUsers",
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "Keycloak token",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/User"
+              }
             }
           },
           "401" : {
@@ -975,7 +1122,6 @@
     },
     "User" : {
       "type" : "object",
-      "required" : [ "id", "keycloakId" ],
       "properties" : {
         "id" : {
           "type" : "integer",
@@ -986,6 +1132,22 @@
           "type" : "string",
           "format" : "uuid",
           "description" : "The keycloak id of the user"
+        },
+        "firstName" : {
+          "type" : "string",
+          "description" : "The firstname id of the user"
+        },
+        "lastName" : {
+          "type" : "string",
+          "description" : "The lastname id of the user"
+        },
+        "email" : {
+          "type" : "string",
+          "description" : "The email id of the user"
+        },
+        "username" : {
+          "type" : "string",
+          "description" : "The username id of the user"
         }
       }
     },
@@ -1067,6 +1229,7 @@
     },
     "PowerMeasurement" : {
       "type" : "object",
+      "required" : [ "endTime", "id", "measurementValue", "phaseNumber", "startTime" ],
       "properties" : {
         "id" : {
           "type" : "integer",
@@ -1099,14 +1262,25 @@
         },
         "phaseNumber" : {
           "type" : "integer",
-          "format" : "int64",
           "description" : "Phasenumber"
+        },
+        "device" : {
+          "type" : "object",
+          "properties" : {
+            "name" : {
+              "type" : "string",
+              "description" : "devicename"
+            }
+          }
+        },
+        "relayIsOpen" : {
+          "type" : "boolean"
         }
       }
     },
     "Device" : {
       "type" : "object",
-      "required" : [ "id", "name" ],
+      "required" : [ "name" ],
       "properties" : {
         "id" : {
           "type" : "integer",
@@ -1131,7 +1305,7 @@
     },
     "ControllerDevice" : {
       "type" : "object",
-      "required" : [ "eui", "id", "key" ],
+      "required" : [ "eui", "key" ],
       "properties" : {
         "id" : {
           "type" : "integer",

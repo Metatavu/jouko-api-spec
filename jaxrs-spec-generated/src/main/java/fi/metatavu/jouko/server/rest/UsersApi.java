@@ -25,7 +25,7 @@ import java.lang.Exception;
 @Api(description = "the users API")
 @Consumes({ "application/json;charset=utf-8" })
 @Produces({ "application/json;charset=utf-8" })
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2018-11-05T08:31:11.155+02:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJAXRSSpecServerCodegen", date = "2018-12-16T17:44:01.804+02:00")
 
 
 public interface UsersApi  {
@@ -54,7 +54,7 @@ public interface UsersApi  {
         @ApiResponse(code = 200, message = "Success", response = PowerMeasurement.class, responseContainer = "List"),
         @ApiResponse(code = 401, message = "Unauthorized", response = Unauthorized.class),
         @ApiResponse(code = 500, message = "Internal server error", response = InternalServerError.class) })
-    public Response listAllMeasurements(@PathParam("userId") @ApiParam("The id of the user") Integer userId) throws Exception;
+    public Response listAllMeasurements(@PathParam("userId") @ApiParam("The id of the user") Long userId,@QueryParam("fromTime") @NotNull   @ApiParam("List measurements that start after this point of time, inclusive")  OffsetDateTime fromTime,@QueryParam("toTime") @NotNull   @ApiParam("List measurements that end before this point of time, exclusive")  OffsetDateTime toTime) throws Exception;
 
     @GET
     @Path("/{userId}/devices")
@@ -81,6 +81,19 @@ public interface UsersApi  {
         @ApiResponse(code = 401, message = "Unauthorized", response = Unauthorized.class),
         @ApiResponse(code = 500, message = "Internal server error", response = InternalServerError.class) })
     public Response listInterruptions(@PathParam("userId") @ApiParam("The user whose interruptions we list") Long userId,@QueryParam("fromTime") @NotNull   @ApiParam("List interruptions that start after this point of time, inclusive")  OffsetDateTime fromTime,@QueryParam("toTime") @NotNull   @ApiParam("List interruptions that end before this point of time, exclusive")  OffsetDateTime toTime,@QueryParam("deviceId")   @ApiParam("The device id whose interruptions we list, list all if omitted")  Long deviceId) throws Exception;
+
+    @GET
+    @Path("/{userId}/devices/{deviceId}/powerMeasurements")
+    @Consumes({ "application/json;charset&#x3D;utf-8" })
+    @Produces({ "application/json;charset&#x3D;utf-8" })
+    @ApiOperation(value = "List all measurements by device", notes = "", response = PowerMeasurement.class, responseContainer = "List", authorizations = {
+        @Authorization(value = "bearer")
+    }, tags={ "Devices",  })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Success", response = PowerMeasurement.class, responseContainer = "List"),
+        @ApiResponse(code = 401, message = "Unauthorized", response = Unauthorized.class),
+        @ApiResponse(code = 500, message = "Internal server error", response = InternalServerError.class) })
+    public Response listMeasurementsByDevice(@PathParam("userId") @ApiParam("The id of the user") Long userId,@PathParam("deviceId") @ApiParam("The id of the device") Long deviceId,@QueryParam("fromTime") @NotNull   @ApiParam("List measurements that start after this point of time, inclusive")  OffsetDateTime fromTime,@QueryParam("toTime") @NotNull   @ApiParam("List measurements that end before this point of time, exclusive")  OffsetDateTime toTime) throws Exception;
 
     @PUT
     @Path("/{userId}/interruptions/{interruptionId}/cancelled")

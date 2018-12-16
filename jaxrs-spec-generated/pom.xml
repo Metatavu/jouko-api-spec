@@ -4,7 +4,7 @@
   <artifactId>jouko-api-spec</artifactId>
   <packaging>jar</packaging>
   <name>jouko-api-spec</name>
-  <version>0.0.16</version>
+  <version>0.0.20</version>
   <description>JouKo API specifications</description>
   <url>https://github.com/Metatavu/jouko-api-spec</url>
 
